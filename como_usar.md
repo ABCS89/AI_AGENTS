@@ -12,7 +12,7 @@
 - deverá ser criado um arquivo .env e conter as API_KEYS dos sistemas (OpenAI, Groq, Tavily e outros)
 
 - padrão de arquivo .env:
-    > - GROQ_API_KEY=
+    > - GROQ_API_KEY= versão usada -> openai/gpt-oss-120b
     > - OPENAI_API_KEY=
     > - TAVILY_API_KEY=
 
