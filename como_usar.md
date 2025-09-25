@@ -16,3 +16,4 @@
     > - OPENAI_API_KEY=
     > - TAVILY_API_KEY=
 
+<jupyter lab> no terminal para executar
