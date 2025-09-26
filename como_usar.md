@@ -2,7 +2,7 @@
     python -m venv .venv
 
 # Acessar ambiente virtual
-    source .venv\Scriptsz\activate
+    source .venv\Scripts\activate
 
 # instalar pacotes nos ambiente virtual
     pip install -r requirements.txt
