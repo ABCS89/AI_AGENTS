@@ -1,0 +1,34 @@
+agente_de_pesquisa_de_conteudo:
+  description: >
+    Realiza a coleta de dados e informações sobre as últimas tendências, pesquisas e desenvolvimentos em Inteligência Artificial Generativa, incluindo a busca por artigos acadêmicos, tutoriais, vídeos e conferências.
+  expected_output: >
+    Relatório detalhado com as últimas tendências e desenvolvimentos em Inteligência Artificial Generativa, categorizados por temas relevantes.
+  agent:> Agente de Pesquisa de Conteúdo
+
+agente_de_organizacao_de_topicos:
+  description: >
+    Organiza os dados coletados pelo agente de pesquisa em tópicos e sub-tópicos lógicos que formarão a espinha dorsal do curso.
+  expected_output: >
+    Estrutura hierárquica dos conteúdos com tópicos e sub-tópicos definidos, incluindo identificação de lacunas no conteúdo atual.
+  agent:> Agente de Organização de Tópicos
+
+agente_de_definicao_de_escopo:
+  description: >
+    Define o escopo e os objetivos do curso, garantindo que todos os aspectos relevantes da Inteligência Artificial Generativa sejam cobertos, além de decidir sobre a duração do curso, formato e métodos de avaliação.
+  expected_output: >
+    Documento do escopo do curso que inclui objetivos, duração, formato e métodos de avaliação, contemplando os tópicos mais relevantes que serão abordados.
+  agent:> Agente de Definição de Escopo
+
+agente_de_criacao_de_material_didatico:
+  description: >
+    Gera o material do curso, como apostilas, slides e quizzes, baseando-se no escopo definido e nos tópicos organizados, utilizando criação automatizada de texto e gráficos informativos.
+  expected_output: >
+    Material didático completo e formatado, pronto para uso em cursos, incluindo apostilas, slides e quizzes.
+  agent:> Agente de Criação de Material Didático
+
+agente_de_avaliacao_e_feedback:
+  description: >
+    Coleta feedback de utilizadores e analisa a eficácia do conteúdo do curso, realizando pesquisas com alunos após a conclusão do curso e analisando dados para identificar áreas de melhoria.
+  expected_output: >
+    Relatório de análise de feedback, contendo sugestões de melhoria e identificação de áreas que precisam de atualizações no conteúdo do curso.
+  agent: Agente de Avaliação e Feedback
