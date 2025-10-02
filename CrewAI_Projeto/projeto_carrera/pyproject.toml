@@ -1,7 +1,7 @@
 [project]
-name = "new_project"
+name = "projeto_carrera"
 version = "0.1.0"
-description = "new_project using crewAI"
+description = "projeto_carrera using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
@@ -9,11 +9,11 @@ dependencies = [
 ]
 
 [project.scripts]
-new_project = "new_project.main:run"
-run_crew = "new_project.main:run"
-train = "new_project.main:train"
-replay = "new_project.main:replay"
-test = "new_project.main:test"
+projeto_carrera = "projeto_carrera.main:run"
+run_crew = "projeto_carrera.main:run"
+train = "projeto_carrera.main:train"
+replay = "projeto_carrera.main:replay"
+test = "projeto_carrera.main:test"
 
 [build-system]
 requires = ["hatchling"]
