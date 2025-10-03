@@ -18,8 +18,14 @@ def run():
     Run the crew.
     """
     inputs = {
-        'topic': 'AI LLMs',
-        'current_year': str(datetime.now().year)
+        "definicao_sistema": """
+        Um sistema para criação de conteúdo de cursos de Inteligência Artificial Generativa 
+        que desenvolve uma abordagem estruturada, começando com uma pesquisa aprofundada 
+        de conteúdos relevantes, seguida pela reunião e organização de tópicos importantes. 
+        Em seguida, define o escopo do curso e cria uma apostila abrangente e didática, 
+        garantindo que o material seja de alta qualidade e relevância para os alunos.
+        """
+        
     }
     
     try:

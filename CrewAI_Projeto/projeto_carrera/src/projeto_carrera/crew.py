@@ -14,7 +14,7 @@ _ = load_dotenv()  # take environment variables from .env.
 AGENTOPS_API_KEY = os.getenv("AGENTOPS_API_KEY")
 agentops.init(api_key=AGENTOPS_API_KEY)
 
-
+# Define your crew here-------------------------------------------------------
 @CrewBase
 class ProjetoCarrera():
     """ProjetoCarrera crew"""
@@ -28,36 +28,105 @@ class ProjetoCarrera():
     
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
+    
+    # agent ------------------------------------------------------------------------
+    # 1 ----------------------------------------------------------------------------
     @agent
-    def researcher(self) -> Agent:
+    def analista_de_negocios(self) -> Agent:
         return Agent(
-            config=self.agents_config['researcher'], # type: ignore[index]
+            config=self.agents_config['analista_de_negocios'], # type: ignore[index]
             verbose=True
         )
 
+    # 2 ----------------------------------------------------------------------------
+
     @agent
-    def reporting_analyst(self) -> Agent:
+    def arquiteto_de_sistemas(self) -> Agent:
         return Agent(
-            config=self.agents_config['reporting_analyst'], # type: ignore[index]
+            config=self.agents_config['arquiteto_de_sistemas'], # type: ignore[index]
+            verbose=True
+        )
+    
+    # 3 ----------------------------------------------------------------------------
+        
+    @agent
+    def engenheiro_de_processos(self) -> Agent:
+        return Agent(
+            config=self.agents_config['engenheiro_de_processos'], # type: ignore[index]
+            verbose=True
+        )
+
+    # 4 ----------------------------------------------------------------------------
+
+    @agent
+    def desenvolvedor_backend(self) -> Agent:
+        return Agent(
+            config=self.agents_config['desenvolvedor_backend'], # type: ignore[index]
+            verbose=True
+        )
+ 
+    # 5 ----------------------------------------------------------------------------
+        
+    @agent
+    def qa_testador(self) -> Agent:
+        return Agent(
+            config=self.agents_config['qa_testador'], # type: ignore[index]
             verbose=True
         )
 
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
     # https://docs.crewai.com/concepts/tasks#overview-of-a-task
+    
+    # task -------------------------------------------------------------------------
+    # 1 ----------------------------------------------------------------------------
     @task
-    def research_task(self) -> Task:
+    def definir_escopo(self) -> Task:
         return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
+            config=self.tasks_config['definir_escopo'], # type: ignore[index]
+            output_file="src/projeto_carrera/output/agents.yaml"
         )
 
+    # 2 ----------------------------------------------------------------------------
+
     @task
-    def reporting_task(self) -> Task:
+    def modelar_agentes(self) -> Task:
         return Task(
-            config=self.tasks_config['reporting_task'], # type: ignore[index]
+            config=self.tasks_config['modelar_agentes'], # type: ignore[index]
+            output_file="src/projeto_carrera/output/tasks.yaml"
+        )
+    
+    # 3 ----------------------------------------------------------------------------
+    @task
+    def planejar_tarefas(self) -> Task:
+        return Task(
+            config=self.tasks_config['planejar_tarefas'], # type: ignore[index]
+            context=[self.definir_escopo()],
+            output_file="src/projeto_carrera/output/crew.py"
+        )
+
+    # 4 ----------------------------------------------------------------------------
+
+    @task
+    def implementar_orquestracao(self) -> Task:
+        return Task(
+            config=self.tasks_config['implementar_orquestracao'], # type: ignore[index]
+            context=[self.definir_escopo(),
+                     self.modelar_agentes()],
             output_file='report.md'
         )
-
+        
+    # 5 ----------------------------------------------------------------------------
+    
+    @task
+    def implementar_orquestracao(self) -> Task:
+        return Task(
+            config=self.tasks_config['implementar_orquestracao'], # type: ignore[index]
+            output_file='report.md'
+        )
+        
+    # crew ----------------------------------------------------------------------------  
+    
     @crew
     def crew(self) -> Crew:
         """Creates the ProjetoCarrera crew"""
