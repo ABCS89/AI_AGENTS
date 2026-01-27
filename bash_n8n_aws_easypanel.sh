@@ -6,7 +6,7 @@ curl -sSL https://get.easypanel.io | sh
 
 # configurar a porta 3000 (TCP) no security group para acessar o easypanel
 
-# no easypanel procurar n8n para ser instalardo
+# no easypanel procurar n8n para ser instalado
 
 # adicionar regra https para acessar o n8n
 

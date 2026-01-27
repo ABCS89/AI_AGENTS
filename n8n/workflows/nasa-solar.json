@@ -1,0 +1,183 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a315ade2-997e-4804-b876-9dcbe482133a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "donkiSolarFlare",
+        "additionalFields": {
+          "startDate": "={{ $today.minus(30, 'days').toFormat('yyyy-MM-dd') }}"
+        }
+      },
+      "type": "n8n-nodes-base.nasa",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0c510233-4319-4819-95b4-0616861ddd20",
+      "name": "Get a DONKI solar flare",
+      "credentials": {
+        "nasaApi": {
+          "id": "rJCqM7IGzuMml2ci",
+          "name": "NASA account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "da0c363e-f9c1-4eaa-8a1e-1b654f4cb72e",
+              "leftValue": "={{ $json.classType }}",
+              "rightValue": "M",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0dbd1846-8076-485e-8b4e-91b131bfb786",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "## Dados de explosão solar\n",
+        "height": 336,
+        "width": 1104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "d5d0e62f-49c0-474a-94e1-14f3bd0903b2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "890e2f03-c585-4e2a-ad2c-ff894d922968",
+              "name": "flrID",
+              "value": "=Uma Erupção solar de classe {{ $json.classType }} foi detectada na localização {{ $json.sourceLocation }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "184d2c4e-dda7-4858-b4e9-88a15ceec9e0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "flrID",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        832,
+        -96
+      ],
+      "id": "6a4166e0-9036-47b2-bb7d-c55e549144dc",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a DONKI solar flare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a DONKI solar flare": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "864852bc-5af3-446c-8868-85ea574db0b3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eafcb03783b1a23ac26ecd8a0b94ecf1ecf463e073262bc22768b5621fca68e6"
+  },
+  "id": "TlxUl8dA7amCfNYcJAUF3",
+  "tags": []
+}
