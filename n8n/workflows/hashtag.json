@@ -18,16 +18,51 @@
       "typeVersion": 1.3,
       "position": [
         0,
-        -16
+        0
       ],
-      "id": "dc8be54c-4d0d-446e-9d36-596a7822f11a",
+      "id": "867d9eee-e451-4b26-84fd-78afc13f04ee",
       "name": "Gmail Trigger",
       "credentials": {
         "gmailOAuth2": {
-          "id": "4QcHfudVsJEOGqML",
+          "id": "FUn7LNqqD4O83cNn",
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2f02f67a-816e-4d12-bcb7-767b1f8837e9",
+              "name": "email",
+              "value": "={{ $json.from.value[0].address }}",
+              "type": "string"
+            },
+            {
+              "id": "84796d6a-46dd-4629-ad81-43ce7fde7e78",
+              "name": "assunto",
+              "value": "={{ $json.headers.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "7750dfd6-264e-4003-8a24-761ebf4a5507",
+              "name": "mensagem",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0019fdbc-ddf0-4bc3-95ad-832956173202",
+      "name": "Edit Fields"
     },
     {
       "parameters": {
@@ -40,13 +75,12 @@
           },
           "conditions": [
             {
-              "id": "7ecb77b9-4ae6-4fa1-87cd-dd1a24f52bb2",
-              "leftValue": "",
-              "rightValue": "",
+              "id": "9966ca02-8f53-4335-bc30-80473db8bcc4",
+              "leftValue": "={{ $json.mensagem }}",
+              "rightValue": "coparticipação",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "contains"
               }
             }
           ],
@@ -58,47 +92,10 @@
       "typeVersion": 2.3,
       "position": [
         448,
-        -16
+        0
       ],
-      "id": "2fc3a919-9f93-48dd-b14b-4bb2fb558a44",
+      "id": "75eabde6-feb9-45b2-9b54-ac7b35997505",
       "name": "If"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.mensagem }}",
-        "options": {
-          "systemMessage": "Olá, você é um agente que responde superficialmente se o n8n conectou ou não.\n( se você receber esta mensagem, retorne positivo.)"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3,
-      "position": [
-        672,
-        -16
-      ],
-      "id": "1c4269bb-1b47-46cc-b950-8778bf47ad1a",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "model": "meta-llama/llama-4-maverick-17b-128e-instruct",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
-      "position": [
-        672,
-        224
-      ],
-      "id": "3b0c1fd5-330f-491d-a68f-b5782250a183",
-      "name": "Groq Chat Model",
-      "credentials": {
-        "groqApi": {
-          "id": "2VGqt8nXD4olNh6B",
-          "name": "Groq account"
-        }
-      }
     },
     {
       "parameters": {
@@ -120,9 +117,9 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "from": "={{ $json.from.value[0].address }}",
-            "assunto": "={{ $json.headers.subject }}",
-            "mensagem": "={{ $json.text }}"
+            "from": "={{ $('Edit Fields').item.json.email }}",
+            "assunto": "={{ $('Edit Fields').item.json.assunto }}",
+            "mensagem": "={{ $('Edit Fields').item.json.mensagem }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -162,31 +159,17 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        224,
-        -16
+        672,
+        0
       ],
-      "id": "b3a486d9-8714-4ef7-bd14-ac84b6ed1caa",
+      "id": "081306be-0a93-436c-af4c-55dff0172d18",
       "name": "Append row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "Jsg0w9BZsakMZpye",
+          "id": "FYGhG1OwS8mn88EN",
           "name": "Google Sheets account"
         }
       }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.mensagem }}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        768,
-        336
-      ],
-      "id": "fe69edca-ad53-4386-889d-9fbd0a606942",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -198,18 +181,69 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        1024,
-        -16
+        1248,
+        0
       ],
-      "id": "3c4b2015-f2ce-451e-990a-766af9673de5",
+      "id": "c5b41727-a331-413d-9ecd-21aee7153ca8",
       "name": "Reply to a message",
-      "webhookId": "24fe6bee-88ea-4001-ac64-abd13394c50b",
+      "webhookId": "6dce67b5-883a-4917-82f2-5b033d3cf81d",
       "credentials": {
         "gmailOAuth2": {
-          "id": "4QcHfudVsJEOGqML",
+          "id": "FUn7LNqqD4O83cNn",
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensagem }}",
+        "options": {
+          "systemMessage": "você está em um ambiente de n8n, então responda a pergunta do email com entusiasmo sem sair do contexto da pergunta"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        896,
+        0
+      ],
+      "id": "36bb235b-33e3-4c22-bb6a-15bd87b828de",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        896,
+        224
+      ],
+      "id": "96a45a4f-f941-42d8-bfa4-f5745031e616",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "fkxKq4IjhU5VM2z3",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.mensagem }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1008,
+        304
+      ],
+      "id": "3179a423-da26-48a0-a1d7-1474f7ee11b4",
+      "name": "Simple Memory"
     }
   ],
   "pinData": {},
@@ -218,7 +252,7 @@
       "main": [
         [
           {
-            "node": "Append row in sheet",
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
@@ -229,7 +263,40 @@
       "main": [
         [
           {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
             "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
             "type": "main",
             "index": 0
           }
@@ -247,17 +314,6 @@
         ]
       ]
     },
-    "Append row in sheet": {
-      "main": [
-        [
-          {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Simple Memory": {
       "ai_memory": [
         [
@@ -268,28 +324,19 @@
           }
         ]
       ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Reply to a message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "ca588207-d44b-411c-b559-5055a09f57cd",
+  "versionId": "b0bf9c4f-451b-432a-b116-a80ee76c7b7d",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "2a9754f0f2e43f4041d9d3b150be629054f61e4fec5ae16d898555f989ea901c"
+    "instanceId": "a3918be79298b063e0c8dd3ff749f4c9c3be477131ce04b83b76640aaf73a9a1"
   },
-  "id": "Kf9ePVCWgnGzjv1K",
+  "id": "VBORctk0yrwXtoJixgm_l",
   "tags": []
 }
