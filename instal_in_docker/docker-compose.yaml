@@ -1,0 +1,17 @@
+services:
+  n8n-youtube:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    volumes:
+      .\n8n\node.n8n
+    environment:
+      GENERIC_TIMEZONE: America/Sao_Paulo
+      restart: unsless-stopped
+      networks:
+        - n8n-network-youtube
+
+networks:
+  n8n-network-youtube:
+    driver: bridge
+    
