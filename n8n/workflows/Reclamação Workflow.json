@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "Reclamação Workflow",
   "nodes": [
     {
       "parameters": {
@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        0,
-        0
+        -1072,
+        336
       ],
-      "id": "946b1400-552d-4654-925d-116e7dfa7453",
+      "id": "17dcbadd-c4e6-49c7-bc99-6f365298c8a1",
       "name": "Webhook",
       "webhookId": "d16816fd-674c-4aa9-b764-75bc3c42e240"
     },
@@ -29,10 +29,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        208,
-        0
+        -704,
+        336
       ],
-      "id": "b2927bf3-3675-44ec-a2c3-5f3643bea1b6",
+      "id": "0b6b09ad-ed21-415f-a228-5025c311da7c",
       "name": "AI Agent"
     },
     {
@@ -56,14 +56,14 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        304,
-        240
+        -608,
+        128
       ],
-      "id": "0ebd412c-15ba-4b44-a32f-2ee090e49161",
+      "id": "70ed6ec3-3b64-4abc-a4d3-62c79e51afa0",
       "name": "Get row(s) in sheet in Google Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "0CdWKSL163v0gQXG",
+          "id": "fEH9JkpHWgPtvFlx",
           "name": "Google Sheets account"
         }
       }
@@ -75,14 +75,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        208,
-        -304
+        -704,
+        656
       ],
-      "id": "71889dc6-14b2-4ce5-b9a9-c5bec01b2c5a",
+      "id": "70766fb7-91b7-4a91-b820-a6af4945e8c8",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "5V5Ux35UefbN4LCG",
+          "id": "WwZUGAE0tDiOtmDn",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -94,10 +94,10 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        352,
-        -144
+        -560,
+        736
       ],
-      "id": "0afac125-e14d-46d8-8292-ed3d83dc615d",
+      "id": "19f0fc91-af5b-4f53-94d9-d7db656d6b3c",
       "name": "Structured Output Parser"
     },
     {
@@ -127,10 +127,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        560,
-        0
+        -320,
+        336
       ],
-      "id": "69a9b19f-e661-4eea-ab81-66780aac1a84",
+      "id": "dd29d937-fb86-4b2c-845c-f5354266ba75",
       "name": "If"
     },
     {
@@ -141,43 +141,43 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        832,
-        -224
+        0,
+        0
       ],
       "typeVersion": 1,
-      "id": "1a7cd8b7-8271-436c-ba8b-3b720816e281",
+      "id": "02b702f9-e0e9-49eb-a177-22dd87758900",
       "name": "Sticky Note"
     },
     {
       "parameters": {
         "content": "Cliente VIP",
-        "height": 208,
+        "height": 224,
         "width": 784,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        832,
-        0
+        0,
+        224
       ],
       "typeVersion": 1,
-      "id": "57240ea5-508a-4c2c-9be0-5626793d2eb8",
+      "id": "851e92fa-dcd9-45e2-9190-c299e685dfe6",
       "name": "Sticky Note1"
     },
     {
       "parameters": {
         "content": "Cliente Problemático",
-        "height": 208,
+        "height": 224,
         "width": 784,
         "color": 3
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        832,
-        224
+        0,
+        464
       ],
       "typeVersion": 1,
-      "id": "80bee4ff-0ba3-41ce-9475-c6a532420520",
+      "id": "2c186581-6600-40ad-ac60-cacf290eaa1f",
       "name": "Sticky Note2"
     },
     {
@@ -216,129 +216,213 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        848,
-        -144
+        64,
+        64
       ],
-      "id": "64359bb4-3567-4b83-aa21-5ca18e145fc9",
+      "id": "e2640265-c8ec-4f7c-8464-98a3414b9f45",
       "name": "If1"
     },
     {
       "parameters": {
+        "sendTo": "={{ $('AI Agent').item.json.output.email }}",
         "subject": "Retorno sobre sua solicitação de reembolso",
-        "message": "=",
+        "message": "=Olá, {{ $('AI Agent').item.json.output.nome }}.\nAnalisei sua solicitação de reembolso.\nVerifiquei aqui que a compra foi efetuada há mais de 7 dias. Como o prazo de garantia incondicional é de 7 dias corridos, infelizmente não conseguiremos prosseguir com o reembolso.\nCaso tenha dúvidas sobre o acesso ou uso do produto, nossa equipe de suporte continua à disposição para te ajudar a tirar o melhor proveito dele.\nAtenciosamente,\nAlon\n",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        1104,
-        -176
+        352,
+        48
       ],
-      "id": "0ca0a8df-1991-4ce4-9573-0f2d48086179",
+      "id": "ae480452-171d-45eb-8109-f6f0f6880b8f",
       "name": "Send a message",
       "webhookId": "015357cf-b9b1-4dad-8f8f-bcc5ce0bc906",
       "credentials": {
         "gmailOAuth2": {
-          "id": "Ca2JuVhMVT8wDauS",
+          "id": "C9XgBT3cZcYLNuyG",
           "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ba58cd51-a536-41e2-b555-a677bf28c1ca",
+              "leftValue": "={{ $('AI Agent').item.json.output.total_gasto_cliente }}",
+              "rightValue": 2500,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "ff0f58f2-dcea-4440-a6c0-ecf978593a37",
+              "leftValue": "={{ $('AI Agent').item.json.output.sentimento }}",
+              "rightValue": "muito_negativo",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        64,
+        304
+      ],
+      "id": "6da7a9e8-9e25-4179-8d2d-a87aa358b799",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('AI Agent').item.json.output.email }}",
+        "subject": "Atualização sobre seu pedido de reembolso",
+        "message": "=Olá, {{ $('AI Agent').item.json.output.nome }}.\nRecebi sua solicitação de reembolso. Notei que o prazo contratual de 7 dias já expirou, que é o prazo de garantia do produto.\nPorém, como você é um dos nossos melhores clientes, não quero encerrar seu caso automaticamente. Encaminhei seu pedido pessoalmente para a nossa equipe financeira analisar uma exceção.\nEm até 24h a nossa equipe entrará em contato com você para dar um retorno.\nAtenciosamente, \nAlon\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        288
+      ],
+      "id": "d2b46873-ad46-4f7c-9101-1d0bec5904df",
+      "name": "Send a message1",
+      "webhookId": "015357cf-b9b1-4dad-8f8f-bcc5ce0bc906",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C9XgBT3cZcYLNuyG",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "06c506f4-05de-476c-ae59-753dd8a35121",
+              "leftValue": "={{ $('AI Agent').item.json.output.total_gasto_cliente }}",
+              "rightValue": 2500,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            },
+            {
+              "id": "a8ecf057-4203-4f4b-a76d-1e4b8013f3ef",
+              "leftValue": "={{ $json.output.sentimento }}",
+              "rightValue": "muito_negativo",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        64,
+        528
+      ],
+      "id": "898845c2-43fa-45a0-b9ca-9a9c472afa80",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('AI Agent').item.json.output.email }}",
+        "subject": "Recebemos sua mensagem - Caso escalado para a Gerência",
+        "message": "=Olá, {{ $('AI Agent').item.json.output.nome }}.\nLi atentamente seu comentário e lamento sua insatisfação.\nO sistema identificou que a compra está fora do prazo de garantia de 7 dias. No entanto, dada a seriedade do seu relato, optei por não finalizar o atendimento por aqui.\nEscalei seu caso com prioridade para o nosso gerente de suporte. Ele vai analisar a situação e retornará o contato o mais breve possível para resolvermos isso.\nAtenciosamente, \nAlon\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        512
+      ],
+      "id": "691b57c9-94f4-4bd4-9c1f-11ae5854974f",
+      "name": "Send a message2",
+      "webhookId": "015357cf-b9b1-4dad-8f8f-bcc5ce0bc906",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C9XgBT3cZcYLNuyG",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8596380866",
+        "text": "=[Pedido de Reembolso fora do Prazo]\n\nPessoal, chegou um pedido de reembolso de um cliente que estourou o prazo de 7 dias (tá com {{ $('AI Agent').item.json.output.dias_desde_compra }} dias).\n\nO sistema barrou, mas como ele é VIP, peço que verifiquem com atenção e avaliem reembolsar o aluno.\n\nAvisei pra ele que a gente ia analisar com carinho e dar um retorno em 24h.\n\nConseguem ver com o financeiro se liberamos essa exceção pra não perder o cliente?\n\nCliente: {{ $('AI Agent').item.json.output.nome }}\n\nE-mail: {{ $('AI Agent').item.json.output.email }}\n\nProduto: {{ $('AI Agent').item.json.output.produto_reembolso }}\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        288
+      ],
+      "id": "6ff78cd5-3128-4a53-aec7-f9695ab6b5db",
+      "name": "Send a text message",
+      "webhookId": "808653a3-326f-42b2-a631-44857b3b398d",
+      "credentials": {
+        "telegramApi": {
+          "id": "umeXcues0IcHgiTN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8596380866",
+        "text": "=⚠️ Atenção aqui, gente.\n\nTemos um cliente que pediu reembolso fora do prazo, mas mandou uma mensagem bem pesada..\n\nO comentário dele foi esse: \"{{ $('AI Agent').item.json.output.comentario }}\"\n\nPra evitar que ele vá pro Reclame Aqui ou procon, eu já respondi dizendo que escalei o caso pra gerência. Conseguem dar uma atenção pra esse caso por favor?\n\nCliente: {{ $('AI Agent').item.json.output.nome }}\n\nE-mail: {{ $('AI Agent').item.json.output.email }}\n\nProduto: {{ $('AI Agent').item.json.output.produto_reembolso }}\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        512
+      ],
+      "id": "cd116978-5b5b-458d-ba56-7f92736b49fc",
+      "name": "Send a text message1",
+      "webhookId": "808653a3-326f-42b2-a631-44857b3b398d",
+      "credentials": {
+        "telegramApi": {
+          "id": "umeXcues0IcHgiTN",
+          "name": "Telegram account"
         }
       }
     }
   ],
-  "pinData": {
-    "Webhook": [
-      {
-        "json": {
-          "headers": {
-            "host": "n8n-n8n.uf116w.easypanel.host",
-            "user-agent": "Tally Webhooks",
-            "content-length": "1256",
-            "accept": "application/json, text/plain, */*",
-            "accept-encoding": "gzip, compress, deflate, br",
-            "baggage": "sentry-environment=production,sentry-release=6c961e69eed67e2855c1c35cd2d282da261ab6de,sentry-public_key=6af4b6673f1648edaa8fef3f2ca43405,sentry-trace_id=3dcf49ff11748f7826a8f9ffe881df9e,sentry-org_id=407628",
-            "content-type": "application/json",
-            "sentry-trace": "3dcf49ff11748f7826a8f9ffe881df9e-838af851cbfb2da9",
-            "x-forwarded-for": "34.96.62.175",
-            "x-forwarded-host": "n8n-n8n.uf116w.easypanel.host",
-            "x-forwarded-port": "443",
-            "x-forwarded-proto": "https",
-            "x-forwarded-server": "f0a3e8009c40",
-            "x-real-ip": "34.96.62.175"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "eventId": "07685bac-c117-40c9-9c0f-adefb1b468f5",
-            "eventType": "FORM_RESPONSE",
-            "createdAt": "2026-02-05T19:18:50.374Z",
-            "data": {
-              "responseId": "5BN95rv",
-              "submissionId": "5BN95rv",
-              "respondentId": "NpANoDG",
-              "formId": "9qQY2X",
-              "formName": "Hashtag",
-              "createdAt": "2026-02-05T19:18:50.000Z",
-              "fields": [
-                {
-                  "key": "question_QD6Wa7",
-                  "label": "Nome Completo",
-                  "type": "INPUT_TEXT",
-                  "value": "Ronaldo"
-                },
-                {
-                  "key": "question_9WzygQ",
-                  "label": "Qual o seu melhor email?",
-                  "type": "INPUT_TEXT",
-                  "value": "alonpinheirohashtag@gmail.com"
-                },
-                {
-                  "key": "question_e6dlje",
-                  "label": "",
-                  "type": "MULTIPLE_CHOICE",
-                  "value": [
-                    "94f2a55c-8902-4973-9408-6363a29b4329"
-                  ],
-                  "options": [
-                    {
-                      "id": "f762f59f-1537-49b1-ab80-9b03b3b756cd",
-                      "text": "Software de Contabilidade"
-                    },
-                    {
-                      "id": "7d2b58a3-d0b8-46b0-9567-3caa4c265665",
-                      "text": "Software de Gestão de peojetos"
-                    },
-                    {
-                      "id": "86c5cd85-9ead-44a4-bccf-b375cfd8e011",
-                      "text": "Software de Edição de vídeos"
-                    },
-                    {
-                      "id": "9d0e7c8c-79d2-4436-bfcb-e9b688165f77",
-                      "text": "Plataforma de Criação de sites"
-                    },
-                    {
-                      "id": "94f2a55c-8902-4973-9408-6363a29b4329",
-                      "text": "Plataforma de CRM de Vendas"
-                    }
-                  ]
-                },
-                {
-                  "key": "question_WNvBkN",
-                  "label": "Comente aqui o que houve",
-                  "type": "TEXTAREA",
-                  "value": "quero meu dinheiro de volta pois o software não funciona e se vocês não devolverem meu dinheiro vou processar vocês."
-                }
-              ]
-            }
-          },
-          "webhookUrl": "https://n8n-n8n.uf116w.easypanel.host/webhook-test/d16816fd-674c-4aa9-b764-75bc3c42e240",
-          "executionMode": "test"
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
@@ -414,6 +498,64 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     }
@@ -424,11 +566,11 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "08810d6d-f758-4343-8a44-770941877662",
+  "versionId": "c3d3a13a-37d2-45b7-9cc9-53a93182e718",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4fb2de25b2e4515cda43a69d27e14cd0569cae6d1eddd3616edc52ff4f4e9aa6"
+    "instanceId": "b0a9b75736edf9220cfc385eeea639af19b93d11c8bde278aceb66a16a5a65b8"
   },
-  "id": "jpZ-FqOvXMke-4xyPe1uQ",
+  "id": "Q3X0kXkq6gxSIGZRCdGyS",
   "tags": []
 }

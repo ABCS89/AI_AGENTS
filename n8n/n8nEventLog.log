@@ -1,2 +1,0 @@
-{"__type":"$$EventMessageAudit","id":"f937c543-c5be-47a1-8164-d62e48fa84e5","ts":"2026-02-03T23:31:48.465+00:00","eventName":"n8n.audit.user.login.success","message":"n8n.audit.user.login.success","payload":{"userId":"a5c6031a-5d2c-49c4-9f00-74da79f5463e","_email":"andre_devops@hotmail.com","_firstName":"Andre","_lastName":"Bueno","globalRole":"global:owner","authenticationMethod":"email"}}
-{"__type":"$$EventMessageConfirm","confirm":"f937c543-c5be-47a1-8164-d62e48fa84e5","ts":"2026-02-03T23:31:48.465+00:00","source":{"id":"0","name":"eventBus"}}
