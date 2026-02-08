@@ -1,0 +1,754 @@
+{
+  "name": "attachments",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        128
+      ],
+      "id": "f340a33f-a8d9-4a7a-b7b6-e368d3887b37",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4QcHfudVsJEOGqML",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6e3d38e4-c021-4915-a630-934e7f683eb9",
+              "leftValue": "={{ $binary.attachment_0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        128
+      ],
+      "id": "3070b091-bc0a-4586-9f58-fffac11c9b02",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "$binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        448,
+        32
+      ],
+      "id": "96bd0905-3bbd-44d0-b49c-6475bd47b9f5",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        672,
+        32
+      ],
+      "id": "79dde0ce-5b26-4776-8a4f-c3d643bab6cb",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash-lite"
+        },
+        "text": "Você é um assistente de extração de dados.\n \nIMPORTANTE (regra crítica):\n- A resposta DEVE ser um JSON VÁLIDO, PURO, INICIANDO com { e TERMINANDO com }.\n- NÃO use ```json, NÃO use crases, NÃO use texto antes ou depois.\n- NÃO use quebras de linha fora do JSON.\n- NÃO use aspas extras envolvendo o JSON.\n- Se violar qualquer regra acima, a resposta será considerada inválida.\n \nTarefa:\nLeia o conteúdo do PDF (fatura ou recibo) fornecido e extraia os dados abaixo para preencher uma planilha.\n \nSe algum campo não existir no documento, retorne null.\n \nFormato do JSON (use EXATAMENTE essas chaves):\n{\n  \"data_fatura\": string | null,\n  \"fornecedor\": string | null,\n  \"valor\": number | null,\n  \"moeda\": string | null,\n  \"impostos\": number | null,\n  \"numero_fatura\": string | null,\n  \"categoria\": string | null,\n  \"tipo\": \"corporativo\" | \"pessoal\" | null,\n  \"metodo_pagamento\": string | null,\n  \"nome_sugerido_arquivo\": string\n}\n \nRegras de formatação:\n- Datas: YYYY-MM-DD\n- Valores numéricos: sem símbolo de moeda, usando ponto decimal\n- \"tipo\": use \"corporativo\" ou \"pessoal\" apenas\n- Não invente informações\n \nRegras para \"arquivo_sugerido\":\n- Formato: Data_Fornecedor_Valor.pdf\n- Fornecedor: sem acentos, sem caracteres especiais, espaços como \"_\"\n- Valor: 2 casas decimais, ponto substituído por \"-\"\n \nExemplo válido de resposta (apenas como referência de formato):\n{\"data_fatura\":\"2025-05-02\",\"fornecedor\":\"Empresa_X\",\"valor\":273.00,\"moeda\":\"BRL\",\"impostos\":13.00,\"numero_fatura\":\"ABC-123\",\"categoria\":\"Servicos\",\"tipo\":\"corporativo\",\"metodo_pagamento\":null,\"nome_sugerido_arquivo\":\"2025-05-02_Empresa_X_273-00.pdf\"}\n \n## Para análise de nota corporativa ou pessoal:\n \n1. REGRA DE OURO (CLIENTE): Procure no texto se há menção ao cliente \"Hashtag Treinamentos\". Se a fatura foi emitida para esta empresa, a categoria é OBRIGATORIAMENTE \"Corporativo\".\n2. ANÁLISE DE CONTEXTO: Se não houver nome de cliente explícito, analise o item comprado: - Se for serviço de streaming (ex: Netflix), delivery de comida (ex: iFood), transporte individual (ex: Uber) ou apps de uso geral, classifique como \"Pessoal\". - Se for serviço empresarial (ex: Marketing, TI, Consultoria, Material de Escritório), classifique como \"Corporativo\".\n \nAgora gere a resposta FINAL obedecendo rigorosamente todas as regras acima.",
+        "inputType": "binary",
+        "binaryPropertyName": "={{ Object.keys($binary)[0] }}",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -48
+      ],
+      "id": "d78b9ced-c66b-46f5-a0cb-7d193183a0af",
+      "name": "Analyze document",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DwnrAP1fXHs4catv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        448,
+        224
+      ],
+      "id": "a250078a-1c11-4baf-986e-0e83dc988e72",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": []
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        -48
+      ],
+      "id": "15a2100d-f766-4671-b8ed-8bac22f4c852",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $json.candidates[0].content.parts[0].text;\n\n// limpeza ultra defensiva\ntext = text\n  .replace(/```json/gi, '')\n  .replace(/```/g, '')\n  .replace(/^\\s+|\\s+$/g, '')\n  .trim();\n\nlet parsed;\ntry {\n  parsed = JSON.parse(text);\n} catch (e) {\n  throw new Error(\n    \"Resposta do modelo não é JSON válido.\\nConteúdo recebido:\\n\" + text\n  );\n}\n\nreturn [{ json: parsed }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -48
+      ],
+      "id": "2bdaeab9-cc04-43e1-b556-4ff22718603b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "67e9f963-83f5-4c45-98e6-5a89b4652cf5",
+              "leftValue": "={{ $json.tipo }}",
+              "rightValue": "corporativo",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1568,
+        -48
+      ],
+      "id": "48af9e7f-5338-4e7e-a26c-5479d450285e",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1792,
+        -160
+      ],
+      "id": "c5817850-1ed9-4744-b688-4b4855372aec",
+      "name": "Merge Corporativo"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1792,
+        80
+      ],
+      "id": "9ecf1851-bbed-4eeb-97c0-a07f80ef5a0e",
+      "name": "Merge Pessoal"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1emBcwKoIDiT9nTEfEPfcOBSZJrzLlyw0Pcm30W6Kf6U",
+          "mode": "list",
+          "cachedResultName": "TESTE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1emBcwKoIDiT9nTEfEPfcOBSZJrzLlyw0Pcm30W6Kf6U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1428487717,
+          "mode": "list",
+          "cachedResultName": "Faturas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1emBcwKoIDiT9nTEfEPfcOBSZJrzLlyw0Pcm30W6Kf6U/edit#gid=1428487717"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Data da Fatura": "={{ $('Code in JavaScript').item.json.data_fatura }}",
+            "Fornecedor": "={{ $('Code in JavaScript').item.json.fornecedor }}",
+            "Valor": "={{ $('Code in JavaScript').item.json.valor }}",
+            "Moeda": "={{ $('Code in JavaScript').item.json.moeda }}",
+            "Impostos": "={{ $('Code in JavaScript').item.json.impostos }}",
+            "Número da Fatura": "={{ $('Code in JavaScript').item.json.numero_fatura }}",
+            "Categoria": "={{ $('Code in JavaScript').item.json.categoria }}",
+            "Corporativo ou Pessoal": "={{ $('Code in JavaScript').item.json.tipo }}",
+            "Método de Pagamento": "={{ $('Code in JavaScript').item.json.metodo_pagamento }}",
+            "E-mail de Origem": "={{ $('Gmail Trigger').item.json.from.value[0].address }}",
+            "URL do Arquivo": "={{ $json.webViewLink }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Data da Fatura",
+              "displayName": "Data da Fatura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fornecedor",
+              "displayName": "Fornecedor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Valor",
+              "displayName": "Valor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Moeda",
+              "displayName": "Moeda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Impostos",
+              "displayName": "Impostos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Número da Fatura",
+              "displayName": "Número da Fatura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoria",
+              "displayName": "Categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Corporativo ou Pessoal",
+              "displayName": "Corporativo ou Pessoal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Método de Pagamento",
+              "displayName": "Método de Pagamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL do Arquivo",
+              "displayName": "URL do Arquivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "E-mail de Origem",
+              "displayName": "E-mail de Origem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2240,
+        16
+      ],
+      "id": "ce36ac8f-c73b-4a4c-a3a4-f6cc97c8659e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jsg0w9BZsakMZpye",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "={{ Object.keys($binary)[0] }}",
+        "name": "={{ $json.nome_sugerido_arquivo }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1rjbFGBr8WX3IT-WGpk9bqK03WrV2bBQS",
+          "mode": "list",
+          "cachedResultName": "corporativo",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1rjbFGBr8WX3IT-WGpk9bqK03WrV2bBQS"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2016,
+        -160
+      ],
+      "id": "e13b53df-69ce-41e5-8944-eee5e475756c",
+      "name": "Upload file corporativo",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BZXMSmzrgyfu3IUY",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "={{ Object.keys($binary)[0] }}",
+        "name": "={{ $json.nome_sugerido_arquivo }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1esU9xmgldzTx-q455PvoGdWAw3H8xvSr",
+          "mode": "list",
+          "cachedResultName": "pessoal",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1esU9xmgldzTx-q455PvoGdWAw3H8xvSr"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2016,
+        80
+      ],
+      "id": "2e3df6d5-6e46-4ccf-832b-a430d71a9a71",
+      "name": "Upload file pessoal",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BZXMSmzrgyfu3IUY",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "19c3ef7e43bc229f",
+          "threadId": "19c3ef7e43bc229f",
+          "labelIds": [
+            "UNREAD",
+            "CATEGORY_PERSONAL",
+            "INBOX"
+          ],
+          "sizeEstimate": 25332,
+          "headers": {
+            "delivered-to": "Delivered-To: andrebcs89@gmail.com",
+            "received": "Received: from EA2P220MB1884.NAMP220.PROD.OUTLOOK.COM\r\n ([fe80::45cc:5c55:641b:5abe]) by EA2P220MB1884.NAMP220.PROD.OUTLOOK.COM\r\n ([fe80::45cc:5c55:641b:5abe%4]) with mapi id 15.20.9587.016; Sun, 8 Feb 2026\r\n 20:35:57 +0000",
+            "x-received": "X-Received: by 2002:a05:6a21:6da4:b0:341:730a:ef54 with SMTP id adf61e73a8af0-393ad2e58d7mr6811088637.1.1770582959287;\r\n        Sun, 08 Feb 2026 12:35:59 -0800 (PST)",
+            "arc-seal": "ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;\r\n b=qeGuP/43jangXUJz2M154qnHgpzyer/JWiTkGHKyyAxkw80VMd2Kfh+Sxq/ToKJtfJBIfvOK9H39C9UUzFaGmxCtoKZ1dksK/93r/JAe/kpaq2c0hic9BvZUDF9ozqWnM1Tu8WdrT5GSZU005OegNGb4WEH4nGVROJSz4XiS1/11QJVmL5z5Pcnr3cnCiWbjNQidzjCKPZ0W0eB3b8LYJGfK3Eh16t0gjxdvOzlwfyU3wGKC78LtgesS0bgg3DnmP1PWhUGrYWc8YHlID9hCAmQ0n0a7Idl6TsaXUAv/ak02+MnJbXi2dweswG2g+vy3EwBL2eKI9soL3vXs8wIoPA==",
+            "arc-message-signature": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;\r\n s=arcselector10001;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;\r\n bh=qc/y81EOI6GCyNxdRT6kSdsGwC0XDxlSd413Tn8oyq0=;\r\n b=ARg0miYqzcJKqyilcQQM+vXpTH3lVdNU+0hgQjljjNrhcszB5yaOqzExXz3DtTXxCZg9igOHCkq29GQenJlIawYUlfOvfzVbifGHBvH/0N0Um0kZU4x2oUOon0UdiEOeCoOM+diX3puO9lGSymPmTytnUxstiLfMwiDKGD8na6U/PEmo6kGxvNBUUMpmDI0eLeF9vwp87QKIzKpa0+KW7n6+gupYGqYKOU0kNvzGwD9+TSBUpbwCOCg8/D1KqnfCvaQJ5XZ3TXancTM1YvZIvL9H4Gl5/w8lmhxolqCHQKKTSE2Av3w+lzZ6dOsgMiYk3wN/xm3zwlENmy1XxdRJtQ==",
+            "arc-authentication-results": "ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;\r\n dkim=none; arc=none",
+            "return-path": "Return-Path: <andre_bueno_calixto@hotmail.com>",
+            "received-spf": "Received-SPF: pass (google.com: domain of andre_bueno_calixto@hotmail.com designates 2a01:111:f403:d111:: as permitted sender) client-ip=2a01:111:f403:d111::;",
+            "authentication-results": "Authentication-Results: mx.google.com;\r\n       dkim=pass header.i=@hotmail.com header.s=selector1 header.b=cXNeb4wU;\r\n       arc=pass (i=1);\r\n       spf=pass (google.com: domain of andre_bueno_calixto@hotmail.com designates 2a01:111:f403:d111:: as permitted sender) smtp.mailfrom=andre_bueno_calixto@hotmail.com;\r\n       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=hotmail.com",
+            "dkim-signature": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;\r\n s=selector1;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;\r\n bh=qc/y81EOI6GCyNxdRT6kSdsGwC0XDxlSd413Tn8oyq0=;\r\n b=cXNeb4wUJMMcpiwB3R5a97IrlZgqd9PTqg/7SmmcS+fllKFxxvgI+w8cs3tSwt7UxJwFqDmdm5teOEchAPW4MLC4kt4XL+tlTwZpWpKj+u0agQyq6dbutPCfnFsHH5EBkcp762dPKI8A8VL8rCgQfyVVSETVB1UCijsULPaKaKeOYhCd22NLZeiA5BK2dh+U+Uq05dRmY9f8egwhcGp07iZ0/hdfEKRhsTbKxdvaW1u30VlalykZMfh9LrQhn22flqXZHLfB2rb2WGHAYGFdhuQ0M4k0ull/t+Iq9xPsmB8LsbB432rX+OcAodUHTw2c+BUGDg43W7+aXQM0sY2ETQ==",
+            "from": "From: =?utf-8?B?QW5kcsOpIEJ1ZW5v?= <andre_bueno_calixto@hotmail.com>",
+            "to": "To: \"andrebcs89@gmail.com\" <andrebcs89@gmail.com>",
+            "subject": "Subject: notas fiscais",
+            "thread-topic": "Thread-Topic: notas fiscais",
+            "thread-index": "Thread-Index: AQHcmTph3CveLjAyq0avmJLcqf42Gw==",
+            "date": "Date: Sun, 8 Feb 2026 20:35:56 +0000",
+            "message-id": "Message-ID:\r\n <EA2P220MB1884B5EBE9A3F8B7FF75E52DA464A@EA2P220MB1884.NAMP220.PROD.OUTLOOK.COM>",
+            "accept-language": "Accept-Language: pt-BR, en-US",
+            "content-language": "Content-Language: pt-BR",
+            "x-ms-has-attach": "X-MS-Has-Attach: yes",
+            "x-ms-tnef-correlator": "X-MS-TNEF-Correlator:",
+            "msip_labels": "msip_labels:",
+            "x-ms-exchange-messagesentrepresentingtype": "x-ms-exchange-messagesentrepresentingtype: 1",
+            "x-ms-publictraffictype": "x-ms-publictraffictype: Email",
+            "x-ms-traffictypediagnostic": "x-ms-traffictypediagnostic: EA2P220MB1884:EE_|DM4P220MB0841:EE_",
+            "x-ms-office365-filtering-correlation-id": "x-ms-office365-filtering-correlation-id: e20bd2f5-bf6c-4f7f-712b-08de6751a9a7",
+            "x-microsoft-antispam": "x-microsoft-antispam:\r\n BCL:0;ARA:14566002|51005399006|31061999003|6072599003|19110799012|15080799012|15030799006|6092099016|461199028|8062599012|8060799015|40105399003|3412199025|440099028|102099032;",
+            "x-microsoft-antispam-message-info": "x-microsoft-antispam-message-info:\r\n =?utf-8?B?TWs2aHBRbzl2NysrRFcwSUh0ajI5VGUxKzdUQmV4OHp5a2JLY3BQVC9nME5Z?=\r\n =?utf-8?B?ZjIyWFlHTnVaWEJOV1VHcFhxVGV2ZTZHOSt6Rjd4V0lodk1kcG5QOVNOY2ti?=\r\n =?utf-8?B?WndkSXNlOGg5cnBlQUF3amZJR2xSNGtsUDhiWjdUY3R3Yy9UTUJ6b3Fzakcy?=\r\n =?utf-8?B?akNJUlhWOHpXS3FwYUJIZnFRekNqbWVscXRQU2pQa1BqV2UwZ1pGdm9ZbDk3?=\r\n =?utf-8?B?cTRkamtiUjg2YUNWbHpaVlp6emZnR1VXRmlsNTlUc0x0bXJ0Rm9HckYvUHlJ?=\r\n =?utf-8?B?MnF6NkJsWmZrdWhiMERhWEt5bzJ5REliUkkwSERuVk1EajFrN2hvRERnMmZn?=\r\n =?utf-8?B?NnVnVTR4N1NqSWx3b1k1NWpNSlVidldGcVlMQm9La09VN240Vkp2dGxzUGk5?=\r\n =?utf-8?B?Zmg1WFZzemVTRms4TCs1V0syZXpEdEtCWFZHRGJzUzhLTVo4M1I0Sk9zYUY2?=\r\n =?utf-8?B?c3MycVIxQklNalpNQWdXWFNHNVg5SmtDL0hTd0pUVTVxUitEY3plWExZamdz?=\r\n =?utf-8?B?b0JtTTBWeUFVN3dVUnlzTC9uZWJucVNYLzUwRWthVEdicUpicnJEeDlmaTUr?=\r\n =?utf-8?B?UTJGK0FvSTFDaWlwTE1SVnN5UUQ4ZFNiQ0MvQVRFeTZCYVFlOVgxeW9QenZv?=\r\n =?utf-8?B?d0tUR2xBT3NETFA1R1c1SFZhb1hhbTZOajlIT0V3T0trL3lodXJ4UkVVTnpz?=\r\n =?utf-8?B?SWdhWk9pejNRNDducDJBaFpWQ3NGdnI4Y2NSUlp1akt2SUN6TWZSbXFIT2tp?=\r\n =?utf-8?B?UTZSVjBVMTFOajl4SHlRc0tUVCtKZTg3b3I3WlBRbDgyUlJLUnc2RCsxc3VQ?=\r\n =?utf-8?B?SHlWRkdtUmJVRXlZWmZwWjNEUkpkV3l0enQrRzJJRWQ4Ull6aFgvbHlBOFR1?=\r\n =?utf-8?B?RWllUk5iZDRUNHdvTWtNcUtPL3hNM2E3T24yU0NKZmt4QkRlaFhFRFVNTXNt?=\r\n =?utf-8?B?bXNiWEJrZ2kwZlBOaVpQTHd4QzJPcXlmOUYrM3lTN2RxbXljblZJZitBekF0?=\r\n =?utf-8?B?aUdFSVMyYm4yempvMS9VeThOVjFXaWFUd2tTdlZvZkt6U0tqaGZVRFQ3eUhL?=\r\n =?utf-8?B?K2duUU04U1lBTURJUWs1ZWcxMnNPdTF1MHljTDRhZjRkYVJxc3FDTkc2c0tR?=\r\n =?utf-8?B?OXg1L2IrVENpY09wdWNVeHU1ZVB2ME8yRHlOOHBkbFJ0dzdLYXBTbkphak5t?=\r\n =?utf-8?B?TzlvNWRVZjBtL085YmtrSkQvL1RrU3pieWVnZXpzUGZ1bjlaTGh1c1lkdEwv?=\r\n =?utf-8?B?Umx3ZmZMZmF4U20rVjJHckQ5OEYxTmZyeU83eS9aSlNMTXdNTHpMTEtVNU9E?=\r\n =?utf-8?B?RzhxYTVvZXNIREJieFk4MkwyanZBclZqZUtlaDc0Z0E0M01mUGRqa2N2c2o0?=\r\n =?utf-8?B?M2M2bWhaUmkzVG9ZTWEvVzZYQVhIYm85eGlDSnN5WTllZCs2VnB3Y2hKVVd0?=\r\n =?utf-8?B?MlpWRGF5a3huZzhxendiNUdhSDM5aTNMbWtzOFQ0KzdGcldFdCtUR2xqbTln?=\r\n =?utf-8?B?WkI2YUcxMEFwdHo5aDJtRnVWdEhGaEd2dE9lbXI1OElIc2FZVDVFWXkrODg1?=\r\n =?utf-8?B?RFNDOE1LOVFzVUlYd3lXSFJoUkVZekxRdStqcTNPWUVhQzRPN1U4S3M0TzZI?=\r\n =?utf-8?B?NVdmRFN4a2FOS0dhNmsxT2szcm04cmc9PQ==?=",
+            "x-ms-exchange-antispam-messagedata-chunkcount": "x-ms-exchange-antispam-messagedata-chunkcount: 1",
+            "x-ms-exchange-antispam-messagedata-0": "x-ms-exchange-antispam-messagedata-0:\r\n =?utf-8?B?THZYTSs1NE5obExEOW5objNmb3NOL1pROHBQWng3N3RvYmllZjdZL1JGSERy?=\r\n =?utf-8?B?U1Nma0RZSWliTkxVQnZ1TDRoVWY5Sm5uWjhHV2RuVy9WQS84Vk5RbnVCQWdr?=\r\n =?utf-8?B?NzA1MTZGQjYrRlp5S1JCdURzckRrdVorRXczcTd2L2xTZXJMOEVJSkloSENx?=\r\n =?utf-8?B?bkFJR0s4MXdIZWtOTXg0NWs3Y3ZscWdDd0FSVkdLUlpicGw2NVVxQ0tYcWpq?=\r\n =?utf-8?B?dHJyRXk5TXNId0NJN0hVZGtqRzl1bFg3STFVa0tKNWd3aFEzamlsdER2SWtI?=\r\n =?utf-8?B?aTZSWkwxR0Z2RlZWM1M2SVlkWk02VmNtdGRkZGFIY3dmM0lVd29HN1ZIK1Zn?=\r\n =?utf-8?B?MDAvWkVXQ1ZOMldxbmxBeEFkR1E3N3hsSERGblAwQTVqTmRKdDBMZlIrT0c5?=\r\n =?utf-8?B?Qi9YMSs3dW5nNEFleDdyQUs1WFNSd2FaK3RlOWxWYXR4alZ6cWpGalNTS3Vi?=\r\n =?utf-8?B?RG53NjhBRVgzM21hb3N2bkpTcFQydGcxQ1JTc3Z3OUlwalo5dnI5U1VKWmJl?=\r\n =?utf-8?B?ejBDQklzYTFBVVhqZEJuSW4vT1lRUENRU0p4MG5JQ1h2TlJ6cUQ1UHRMSk4w?=\r\n =?utf-8?B?dEs1NElTWmxETXNBK0JOc1dLa1VRVnQ2UUtKVlhVbitpdkQ1dlVlaEdLR3A1?=\r\n =?utf-8?B?amxQblI4R3k4Vjc0R01UYlBtRk5aQmZDZG92SGptVkFlMlQramRJSUt1bDVD?=\r\n =?utf-8?B?dk10dlBRbUQ3MmVSam9BRjErTkswVGVMTFhjMUduWmhodHhJSWk5K2w2WEZv?=\r\n =?utf-8?B?dWlab3BPWDJWN2t6b2kxUUdLVXhuOWNPaDR2YWMzY2pXTXA1bVE1V0VvTnI4?=\r\n =?utf-8?B?ZDFvdUZIeUNEMS9QdmJoV1Y5dzRjQlNjYjQvdTc1dnU0Zlhsd1k2dUpzNGlx?=\r\n =?utf-8?B?eENGYjhZamI1SUVEeU53VEJLWnFVaGp6TXVGWXpBSmtiNEJFSVpJN0hFR3BX?=\r\n =?utf-8?B?ellyUGMvdG5SU2Z0QmVjNk5XMmNmSHEwVXlVbEpYdnREcHFrMXhQNVZXb256?=\r\n =?utf-8?B?SFJhNDhka2YwazY4ei9LRDdzRVRYbFJhM3B5amIrekNBUVBjcnF2ZGpveXZI?=\r\n =?utf-8?B?ekEvWVpocEpSSTEzdmJkVFJENHlRL3B2eU9FNzkvRWZ1YnE4TjB2WVJpR0x6?=\r\n =?utf-8?B?NlNrdzlTZzZtYlVScVRCSjVJSlFXT29qWlZqRER0d3IyeE5LeDB5dG9pckxi?=\r\n =?utf-8?B?Uy9nWDYyZXRINXplNmg2SVNRaTBoektmWTAwU2pBVTZCWU5xM0MwWVVvUUc2?=\r\n =?utf-8?B?N25ZQkdIR2NhRHZiKzlaMWtOWFZHM0s4V0M2VGo4WjNzdFZJdWlDMXZQTGUr?=\r\n =?utf-8?B?OW1KV2k3OEVybUEyWUErS1dPa0xHWDQ3TDVIZTVNQzV2UUhaSS9MYkErYXF3?=\r\n =?utf-8?B?WTQ3UFBSNklTYVhWZHU4RVgyNG5RTlE1VFhMaTFVNTN4dTBPbU5jTGcwc0F1?=\r\n =?utf-8?B?QVhKS2hOckJLdXc0a2V2MlE5VXZaa1hiWkxpLzdOeDE2dDdTU0plSE5PR3NU?=\r\n =?utf-8?B?Tlo3SXc2OUI3R05tUUFUYUxwZmNFOS82NVZEN2tUcWw1blhTRmJVOGNCeVBw?=\r\n =?utf-8?B?SGxmRlF0Qk1Ba1QvVzNOTWlRYlNXeUdWNXhHaTZvaFJPQUQ0MlVEMUd0ckdS?=\r\n =?utf-8?B?Nzgvd2krbGVOcFNYWC9WMHgwNktyRTBqdXhQMEJiRnhncnUyS1hXaExIUjVq?=\r\n =?utf-8?B?STRPWWdkZGQrcE5BWktMbVJQRHpZYzVkdUJTamYraFFLSFd0S290QmM0Tzlv?=\r\n =?utf-8?B?V3FXSC9lQ25BNHF2QVYrSWtsZDA4dVUvN0JGWlFkNGlrNnlEY24xd3FuaW1N?=\r\n =?utf-8?B?SnpGR0VuYnB5UG9RQ2lIelNRYm9oR0Vucmk4Q0U1cmwya1JHSnVuZC9nd05o?=\r\n =?utf-8?B?bU1vbUw4c2RtbFE0UWN0eTJTQlVLeEQvYXhPc3JOVmRqS2c9PQ==?=",
+            "content-type": "Content-Type: multipart/mixed;\r\n\tboundary=\"_006_EA2P220MB1884B5EBE9A3F8B7FF75E52DA464AEA2P220MB1884NAMP_\"",
+            "mime-version": "MIME-Version: 1.0",
+            "x-originatororg": "X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-2d793.templateTenant",
+            "x-ms-exchange-crosstenant-authas": "X-MS-Exchange-CrossTenant-AuthAs: Internal",
+            "x-ms-exchange-crosstenant-authsource": "X-MS-Exchange-CrossTenant-AuthSource: EA2P220MB1884.NAMP220.PROD.OUTLOOK.COM",
+            "x-ms-exchange-crosstenant-rms-persistedconsumerorg": "X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000",
+            "x-ms-exchange-crosstenant-network-message-id": "X-MS-Exchange-CrossTenant-Network-Message-Id: e20bd2f5-bf6c-4f7f-712b-08de6751a9a7",
+            "x-ms-exchange-crosstenant-originalarrivaltime": "X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2026 20:35:56.8888\r\n (UTC)",
+            "x-ms-exchange-crosstenant-fromentityheader": "X-MS-Exchange-CrossTenant-fromentityheader: Hosted",
+            "x-ms-exchange-crosstenant-id": "X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa",
+            "x-ms-exchange-transport-crosstenantheadersstamped": "X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4P220MB0841"
+          },
+          "html": "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<style type=\"text/css\" style=\"display:none;\"> P {margin-top:0;margin-bottom:0;} </style>\n</head>\n<body dir=\"ltr\">\n<div style=\"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\" class=\"elementToProof\">\nEnvio notas fiscais em anexo</div>\n<div style=\"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\" class=\"elementToProof\">\nGrato.<span class=\"entityDelimiterBefore\">​</span><span style=\"display: inline-block;\" class=\"_Entity _EType_OWALink _EId_OWALink _EReadonly_1\"><span></span></span><span class=\"entityDelimiterAfter\">​</span><span class=\"entityDelimiterBefore\">​</span><span style=\"display: inline-block;\" class=\"_Entity _EType_OWALink _EId_OWALink_1 _EReadonly_1\"><span></span></span><span class=\"entityDelimiterAfter\">​</span></div>\n</body>\n</html>\n",
+          "text": "Envio notas fiscais em anexo\nGrato.​​​​\n",
+          "textAsHtml": "<p>Envio notas fiscais em anexo<br/>Grato.&ZeroWidthSpace;&ZeroWidthSpace;&ZeroWidthSpace;&ZeroWidthSpace;</p>",
+          "subject": "notas fiscais",
+          "date": "2026-02-08T20:35:56.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "andrebcs89@gmail.com",
+                "name": ""
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><a href=\"mailto:andrebcs89@gmail.com\" class=\"mp_address_email\">andrebcs89@gmail.com</a></span>",
+            "text": "andrebcs89@gmail.com"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "andre_bueno_calixto@hotmail.com",
+                "name": "André Bueno"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Andr&#xE9; Bueno</span> &lt;<a href=\"mailto:andre_bueno_calixto@hotmail.com\" class=\"mp_address_email\">andre_bueno_calixto@hotmail.com</a>&gt;</span>",
+            "text": "\"André Bueno\" <andre_bueno_calixto@hotmail.com>"
+          },
+          "messageId": "<EA2P220MB1884B5EBE9A3F8B7FF75E52DA464A@EA2P220MB1884.NAMP220.PROD.OUTLOOK.COM>"
+        },
+        "binary": {
+          "attachment_0": {
+            "mimeType": "application/pdf",
+            "fileType": "pdf",
+            "fileExtension": "pdf",
+            "data": "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgaHR0cDovL3d3dy5yZXBvcnRsYWIuY29tCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIgL0Y0IDUgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMSAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0Jhc2VGb250IC9UaW1lcy1Sb21hbiAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjIgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago0IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YzIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNSAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjQgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago2IDAgb2JqCjw8Ci9Db250ZW50cyAxMCAwIFIgL01lZGlhQm94IFsgMCAwIDYxMiA3OTIgXSAvUGFyZW50IDkgMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdlcyA5IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKOCAwIG9iago8PAovQXV0aG9yIChcKGFub255bW91c1wpKSAvQ3JlYXRpb25EYXRlIChEOjIwMjUxMjExMTYwOTIyKzAwJzAwJykgL0NyZWF0b3IgKFwodW5zcGVjaWZpZWRcKSkgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjUxMjExMTYwOTIyKzAwJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSB3d3cucmVwb3J0bGFiLmNvbSkgCiAgL1N1YmplY3QgKFwodW5zcGVjaWZpZWRcKSkgL1RpdGxlIChcKGFub255bW91c1wpKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA2IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMTAgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggOTU3Cj4+CnN0cmVhbQpHYXQlITkyalMhJkFKJENtIiVOM0BSajNZXDptMyUxKiRYV2dJcCJKOHQ5O1NgNy5RP21ycEEsIkAiVFhHVDgwKTxyNzxXZzZGKXVJJlIlWGhaQCY5MFVibjQlKU9rdWk8VF8oX2M6Q0taYCgvJEkuMnNYcGg0UiRlVCczOy0lODZUXkQ+NFxxJXB0Vm5CV3UrTzRMTWxMb25tKVtdcVlKIiVrQy8xWCtaZ01rTDQhOkVTOG1nYSo0MyQhQEJJQjAoaitgNzYsYWRqL2trUW0kaUxjJzhpPjgwcnBuKHNLOjEpcjdbS25VNUtkaT9PImdgTF0wX2U1SVxWYl0tLSZSNFJsWFtKViJzKCdXMCNiKDlEQzJQdWFiWHFPP2RYNVUoVSFaI0tqPUU8QFBcTFhFcC0+RTE8QW5pRFBYMVY+RF5ZTl9lZWcxcDM/UDRrOGRGcV80LTkmOXNGK2JNXlY7cUlQTF8pbWljWUknZzdPPFp0VUA0cnQ1PENRVUc1RnJaNk8zcXUpX05uMjA9ZDw9WEcxW1NtM1ZGTUIycVNlLCNkJC8lOSw6LUJJWl4hPCx1RCQqSlpsQUElNVlzTy5GMlRlbjBTLGdcNGpTInI/aU1aJygkN1cvazJNQzlNIltfOjpIaDBqTVFERjNTYUxjaT5tY09aIk4hIWJickZtZz5GLTEkMVc2WltQcE1fZDcxJmJiQj9bW1Yxb2ZeJjNQbXFnZkElS0YiVEBFLiRkUzhZSi5ST1ZJMTcibjk7MildSmt1SSFzU1VAIUtdcTtcP1BfVzomVGUuKTQqZlo9PlNYRFxUc2tCJVY0RnJwSEcmcWZucjw7N0B1JTUscFFdNT8za1lZVDFrX1FEXGxzQWpuWi8wczJPVVBKY01vLSxrXW88MiowOypaXUYvZXIjTCw2ZHRTK0FFYy4sPElYLW5AUUFXNnFKLClUK1gsWy0vc0kxLywwSEwiW2FJTGMsW0lTdV1OVlg0clUjam5xYzEuZCldNSYwZWhuL0xFSzBGXmpbX10/KFE0cUBpcTg/TUojT28sWChxYmEjcVg6alRTLGlGK1wuYDpaKmZZKSMvYSNkQEFUNSs6LmdKbUVjV3JWNFZFTDRacWloQCRRV1JYXy5DWVUsaysyY2gzajI9VDcrOlA4XDZrQy1jIUFhP0pBKCNyQjA4UG04S0hgVU5eYFY1NGlBLSxuR1M7OSlBXzlZUXRqVWJnXSpuRC4zVGRJOjQ/cyJSbDQwLklnXy9jPSRTVVw+b1Nxfj5lbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCAxMQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNzMgMDAwMDAgbiAKMDAwMDAwMDEzNCAwMDAwMCBuIAowMDAwMDAwMjQxIDAwMDAwIG4gCjAwMDAwMDAzNTAgMDAwMDAgbiAKMDAwMDAwMDQ2MiAwMDAwMCBuIAowMDAwMDAwNTgxIDAwMDAwIG4gCjAwMDAwMDA3NzUgMDAwMDAgbiAKMDAwMDAwMDg0MyAwMDAwMCBuIAowMDAwMDAxMTI2IDAwMDAwIG4gCjAwMDAwMDExODUgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8ZGIxODg5ZWE0MWNhNDUwMjdjNWE4OWQwNjM5ZjQwZjk+PGRiMTg4OWVhNDFjYTQ1MDI3YzVhODlkMDYzOWY0MGY5Pl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKGh0dHA6Ly93d3cucmVwb3J0bGFiLmNvbSkKCi9JbmZvIDggMCBSCi9Sb290IDcgMCBSCi9TaXplIDExCj4+CnN0YXJ0eHJlZgoyMjMzCiUlRU9GCg==",
+            "fileName": "fatura_E.pdf",
+            "fileSize": "2.68 kB"
+          },
+          "attachment_1": {
+            "mimeType": "application/pdf",
+            "fileType": "pdf",
+            "fileExtension": "pdf",
+            "data": "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgaHR0cDovL3d3dy5yZXBvcnRsYWIuY29tCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIgL0Y0IDUgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMSAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0Jhc2VGb250IC9UaW1lcy1Sb21hbiAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjIgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago0IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YzIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNSAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjQgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago2IDAgb2JqCjw8Ci9Db250ZW50cyAxMCAwIFIgL01lZGlhQm94IFsgMCAwIDYxMiA3OTIgXSAvUGFyZW50IDkgMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdlcyA5IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKOCAwIG9iago8PAovQXV0aG9yIChcKGFub255bW91c1wpKSAvQ3JlYXRpb25EYXRlIChEOjIwMjUxMjExMTYxODEyKzAwJzAwJykgL0NyZWF0b3IgKFwodW5zcGVjaWZpZWRcKSkgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjUxMjExMTYxODEyKzAwJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSB3d3cucmVwb3J0bGFiLmNvbSkgCiAgL1N1YmplY3QgKFwodW5zcGVjaWZpZWRcKSkgL1RpdGxlIChcKGFub255bW91c1wpKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA2IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMTAgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggNjk5Cj4+CnN0cmVhbQpHYXNhbTlsSExkJkFAWmNrKV1cTSRKb146YSMlcThbJ0ZLYW9odE5MJT9AWy4xa2A3N3EmT1hGZlIxVnAmRG0qNzJuW2hRWlU5PCU2aFRvXiJMc0B1XjgrIjNgITtzUChEKShNOlUwTlA6czA4NjprOm4mIl9PSkxVKm5eQU0jWUZZJiw3MzorJFU/MW05OUpQQkVcVSlCRWAiXzVFMVs7M1dRcDk6JGNEYjMhIlRjJS43YFEjJUtfLFRnYjFmJWBGLF5xTEZYS1xQISZdQ3Nzb04/Ik05U2FUKCdfSSJaYXFuaS06LFJqQjpkW0NIZmYqWjRnU2tLUzppVS9kVTczUkciVE1lUSosK2hpYUgwJCEzKSJnPkNNJ0MoS1JIPGxhUTs9UmZqWGYva1ZwQShtIWs0I1cqSihONUNqT0BfJUIhPiNPUDs1M1dlXEhqMFZNdDteMWhsRk5oPj0hPig6W111NFgqITRZPWFLOmdYXFchWzo5NWlaaVtTSyJnIiNdKDhSMSVQdUQ0PFRUZ1NDbSdaPU0oJ21LPzMrPnAqQVRAcW8mJztfMWBTKkd1IydZXHBnbDUmdSFUVWNkbV4pKSlTYVgmb25FJCM5P2EoRiFOOSt0YW5CQ0dbOFtFK1wtUiU+aDlFKExzPD1NJDZIYUM+VFZDUmFzXExzJUQibVwzIm85VSouUVQrSUhkWy1aNzBiaGJOUWdGTy03KERlZkE+cklVTHJdYidwJW5kSVVaNSE2LERGXFk3ZExBb2AuaFpKMCInLmYuSCRdXyQzaFw7S1VhSydFPjQxQEFNQlZrTik7cllhKWEoR0JWVVU+MVY1P2coOFA3WVtmbT9VaGoyWyJKa1xpI1N0SmBQLmlgTmdXXyYqQTUjcidZZj0/aUZmXFhFamFBRnVCWVdXPmBzJV00XUkvfj5lbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCAxMQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNzMgMDAwMDAgbiAKMDAwMDAwMDEzNCAwMDAwMCBuIAowMDAwMDAwMjQxIDAwMDAwIG4gCjAwMDAwMDAzNTAgMDAwMDAgbiAKMDAwMDAwMDQ2MiAwMDAwMCBuIAowMDAwMDAwNTgxIDAwMDAwIG4gCjAwMDAwMDA3NzUgMDAwMDAgbiAKMDAwMDAwMDg0MyAwMDAwMCBuIAowMDAwMDAxMTI2IDAwMDAwIG4gCjAwMDAwMDExODUgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8NmU3M2RmZjQ1YjNjMGVkY2IwNTE5OTQ1MDUxNGI5YWY+PDZlNzNkZmY0NWIzYzBlZGNiMDUxOTk0NTA1MTRiOWFmPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKGh0dHA6Ly93d3cucmVwb3J0bGFiLmNvbSkKCi9JbmZvIDggMCBSCi9Sb290IDcgMCBSCi9TaXplIDExCj4+CnN0YXJ0eHJlZgoxOTc1CiUlRU9GCg==",
+            "fileName": "fatura_p_03.pdf",
+            "fileSize": "2.42 kB"
+          },
+          "attachment_2": {
+            "mimeType": "application/pdf",
+            "fileType": "pdf",
+            "fileExtension": "pdf",
+            "data": "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgaHR0cDovL3d3dy5yZXBvcnRsYWIuY29tCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIgL0Y0IDUgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMSAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0Jhc2VGb250IC9UaW1lcy1Sb21hbiAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjIgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago0IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YzIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNSAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjQgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago2IDAgb2JqCjw8Ci9Db250ZW50cyAxMCAwIFIgL01lZGlhQm94IFsgMCAwIDYxMiA3OTIgXSAvUGFyZW50IDkgMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdlcyA5IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKOCAwIG9iago8PAovQXV0aG9yIChcKGFub255bW91c1wpKSAvQ3JlYXRpb25EYXRlIChEOjIwMjUxMjExMTYwOTIyKzAwJzAwJykgL0NyZWF0b3IgKFwodW5zcGVjaWZpZWRcKSkgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjUxMjExMTYwOTIyKzAwJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSB3d3cucmVwb3J0bGFiLmNvbSkgCiAgL1N1YmplY3QgKFwodW5zcGVjaWZpZWRcKSkgL1RpdGxlIChcKGFub255bW91c1wpKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA2IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMTAgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggOTMwCj4+CnN0cmVhbQpHYXQlIT51UkxQJ1JmLkdnXW5xJEBxZmZuIXItQlhcaVFtZVExXF8jJXA/YCs7aTNuJ3JyJ01BZlpKdGsqIVFacjJgXiZNIlUlOjJRSHVIMz9sSGdrTDRDN3FCMF4wKCNfJ1daQChmY0g9aDVaYTlcQ0pUPlBDaXMuNV5mMDI+XlJZKjZeJkJzLkdFZ1xtTVNzSWc/Rl9cU1B1RmdgMkVAZ3E3K2E3bHEuSjxxMWFbNSFyanJaViEhNyVWLS9GTyVMZDcmbGsraUcrNi4oQSdJRkhbMUg1bCVLbSlzVkhMUVpnIlx1KFg6SEohTCNBbjNGJ2k0dE9AYmRKZ18zPEopI1YmWlQ6T0g6QCUsOkJUTj5nZVYpJSxTcCx1IXI2Lmg4Ikc/R2klKElHXEBUcSFPN0FXN1daLlptRktiVC5KOU49XW86QlFTRUVHQzlQLEItWC5RUGFYO0dFNk5TWCpYc1U+aHJBY0JlVTREQGU4VV06QVgiMGU2bDxoMDo+WSE8Y0IkckNETk45XV1wN3FcPixrM18uX3I+PS04U2Y0OE0oXUlaZFtqYXIiTyNiZ3VUbjtdYnRuMlNbIkQ9Vy5GZ0o+aGo6VGIzJ2VzXF9gRyomUjZUJFNsOTVpSDtfJzhpXFExTFNnaGhRVEUjc1BwLkdGIVgjTzokVStZYUJTXEsiNSZxVlsvKiRmJ1prKEVTKkZGKyJVIz8oREA2LmQ2JlYxWy1EO2kpMj9tNzdmJlUyb3NiVkxDXkQqQGRmSDpvVDpOOykoTWtTayZUVCg3UUE9QlJXa1dhZFEvJzxWSC9rXiMkXSQlXG5KT18pdFYmKSpkQ2RSX2BHaTU/Sm1gYy5ocEg8bFtZPl8qdGt0PGkjXDYrV01rZ2RcPSg/VzwyKCRYXUprQ0cqRlMoXWIxOTJYVXFxJVs/NVJgMGs6MEokSHNyQ1BBWjBqL2kzSiImalBLMWdoJF4iO0IkUzZbP3VsOFw+Sy9SWjVuXDZVPjM2N0ZPRipcNU8oUitiIzRuSyQ2SDU9aEVcL25ZYXBXPW0mVWwjX0l1YlU8KyNwKkpcYT03YFBtMjUsTkgzaEheOkZBVT87YihMIXQsQjhCU2laKXRJRzdHRVpxOlduV1stIiRpP2IsTVViI3BqTF9vaj1TV1VfZz5PT2dkPE48XlA/akJMR0xANiJUIzFgVjlaWmonZDFZX1JYaWg3K25vX2tzOFMibnE/UiMhcTdRfj5lbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCAxMQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNzMgMDAwMDAgbiAKMDAwMDAwMDEzNCAwMDAwMCBuIAowMDAwMDAwMjQxIDAwMDAwIG4gCjAwMDAwMDAzNTAgMDAwMDAgbiAKMDAwMDAwMDQ2MiAwMDAwMCBuIAowMDAwMDAwNTgxIDAwMDAwIG4gCjAwMDAwMDA3NzUgMDAwMDAgbiAKMDAwMDAwMDg0MyAwMDAwMCBuIAowMDAwMDAxMTI2IDAwMDAwIG4gCjAwMDAwMDExODUgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8NWFkZmMyNDlhNTE3MjMwY2I4YTZlMDk1OWY0OTcyOWU+PDVhZGZjMjQ5YTUxNzIzMGNiOGE2ZTA5NTlmNDk3MjllPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKGh0dHA6Ly93d3cucmVwb3J0bGFiLmNvbSkKCi9JbmZvIDggMCBSCi9Sb290IDcgMCBSCi9TaXplIDExCj4+CnN0YXJ0eHJlZgoyMjA2CiUlRU9GCg==",
+            "fileName": "fatura_K.pdf",
+            "fileSize": "2.65 kB"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Analyze document",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Corporativo",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge Pessoal",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        []
+      ]
+    },
+    "Analyze document": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Merge Corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge Pessoal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Corporativo": {
+      "main": [
+        [
+          {
+            "node": "Upload file corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Pessoal": {
+      "main": [
+        [
+          {
+            "node": "Upload file pessoal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file corporativo": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file pessoal": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c7072285-1f66-4771-8f7a-501ab1798d77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a9754f0f2e43f4041d9d3b150be629054f61e4fec5ae16d898555f989ea901c"
+  },
+  "id": "Dl3EQr4WKYiKBmkr",
+  "tags": []
+}

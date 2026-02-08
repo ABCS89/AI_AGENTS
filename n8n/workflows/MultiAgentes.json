@@ -1,0 +1,495 @@
+{
+  "name": "MultiAgentes",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -288,
+        -80
+      ],
+      "id": "c1101b0d-56c5-49c2-92c5-6c77ff11cdc0",
+      "name": "Telegram Trigger",
+      "webhookId": "69281d2c-9ba6-4e1e-98e3-2d4951ff90c2",
+      "credentials": {
+        "telegramApi": {
+          "id": "rpnZ7G0KCiC3LVdF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c7696f5f-6421-433e-8afa-d735308fbaea",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -64,
+        -80
+      ],
+      "id": "21baee33-1781-445c-bcaa-a8fa10592a28",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        304,
+        304
+      ],
+      "id": "63f6e4ba-4e78-4ca3-ba64-abee055c4304",
+      "name": "Get a file",
+      "webhookId": "4372b57c-838d-4b4a-88b5-7fa67efeddc9",
+      "credentials": {
+        "telegramApi": {
+          "id": "rpnZ7G0KCiC3LVdF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Identidade\nVocê é a Sofia, Gerente de Atendimento da Hashtag Capital, um escritório de assessoria de investimentos de alta performance.\n\nSua função é EXCLUSIVAMENTE:\n1. Classificar a intenção do cliente com base na mensagem.\n2. Acionar a ferramenta (especialista) correspondente.\n3. Atuar como um espelho: A ferramenta vai gerar uma resposta. O seu trabalho é pegar essa resposta e entregá-la ao usuário exatamente como ela veio, sem tirar nem por.\n\n# Regra de Ouro (CRÍTICO - Roteador Invisível)\n- NUNCA responda com frases próprias como \"Vou verificar com o setor...\" ou \"Aguarde um momento\".\n- NUNCA narre o que você está fazendo.\n- NUNCA tente resolver o problema sozinho (exceto em saudações simples).\n\nO cliente deve sentir que foi atendido imediatamente pelo especialista da área.\n\n# Seus Especialistas (Tools)\n1. AgenteFinanceiro:\n   - Assuntos: Financeiro, 2ª via de boleto, pagamentos pendentes.\n   - Ação: Use para questões operacionais e burocráticas (pagamentos).\n\n2. AgenteSuporte:\n   - Assuntos: Dúvidas TÉCNICAS e TEÓRICAS de mercado financeiro. \"O que é Selic?\", \"Como funciona FII?\", \"Diferença de CDB e LCI\", etc\n   - Ação: Use para educação financeira, tirar dúvidas de conceitos.\n\n3. AgenteCS:\n   - Assuntos: RELACIONAMENTO e AGENDAMENTO. \"Quero investir\", \"Marcar reunião\", \"Revisar carteira\", \"Falar com assessor\", \"Perfil de investidor\".\n   - Ação: Use quando o cliente demonstra intenção de agir, investir ou quer contato humano.\n\n# Procedimento de Resposta\n1. Saudação (Apenas \"Oi/Olá\"): Se o usuário disser APENAS uma saudação, responda: \"Olá! Sou a Sofia, Gerente de Atendimento da Hashtag Capital. Posso te direcionar pra Assuntos Financeiros, Dúvidas de Mercado (Suporte) ou Agendamento com Assessor. Como posso te ajudar hoje?\"\n\n2. Solicitação Específica: Se o usuário já enviou a dúvida, acione a ferramenta correspondente imediatamente.\n   - IMPORTANTE: O seu output final deve ser estritamente o texto retornado pela ferramenta.\n\n3. Dúvida: Se não souber classificar, chame o `AgenteCS`.\n\n# TRATAMENTO DE ERRO (IMPORTANTE) Se a ferramenta (sub-agente) retornar a mensagem exata `##RESET##`, isso significa que ela não conseguiu resolver o pedido. NESSE CASO, NÃO ENVIE `##RESET##` PARA O USUÁRIO. Em vez disso, assuma o controle e responda: \"Desculpe, poderia explicar melhor sua dúvida?\"\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1392,
+        -96
+      ],
+      "id": "ebd4ec81-bbec-4922-b6b9-7a4034d77e14",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        304
+      ],
+      "id": "fd21a372-d8fb-4156-a9f2-cc5962b25ef7",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "BAVQ4htDHPiIP6X6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "VOZ",
+        "height": 320,
+        "width": 816,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "0aa5ca54-7ef4-45b8-a497-bbdc5e481e13",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "TEXTO\n",
+        "height": 176,
+        "width": 816
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "1382dd27-cf71-42d3-8be5-9adb20bdb3db",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1856,
+        -96
+      ],
+      "id": "56bbe094-3765-422a-b4c1-4db311391b90",
+      "name": "Send a text message",
+      "webhookId": "ce5155cb-cd8c-4240-8f67-ec2e59ecb81f",
+      "credentials": {
+        "telegramApi": {
+          "id": "rpnZ7G0KCiC3LVdF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "73164afa-813c-433b-9e0b-cb8bb2162b23",
+              "name": "mensagem",
+              "value": "={{ $json.content.parts[0].text }}{{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        304
+      ],
+      "id": "bdfe80ce-1526-44aa-961d-6255c25aba95",
+      "name": "VOZ"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9c051b1b-d2fd-494c-82fe-b36937cfced2",
+              "name": "mensagem",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "7b62c379-73b1-4ddf-bdb4-7e31d194db35",
+      "name": "TEXTO"
+    },
+    {
+      "parameters": {
+        "description": "Especialista Técnico e Tutor. Use para dúvidas técnicas",
+        "workflowId": {
+          "__rl": true,
+          "value": "rEtAJbyUgzRJUdg5",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/rEtAJbyUgzRJUdg5",
+          "cachedResultName": "Suporte"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Mensagem": "={{ $json.mensagem }}",
+            "chatID": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1552,
+        -368
+      ],
+      "id": "b0fbdf76-f8bb-4114-a3e5-91192853931f",
+      "name": "suporte"
+    },
+    {
+      "parameters": {
+        "description": "Especialista em Financeiro. Use para boletos, 2a via, regularização de pagamento",
+        "workflowId": {
+          "__rl": true,
+          "value": "ldae735ArP01bg9v",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ldae735ArP01bg9v",
+          "cachedResultName": "Financeiro"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Mensagem": "={{ $json.mensagem }}",
+            "chatID": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1392,
+        -368
+      ],
+      "id": "0f8522f9-127b-43e4-bd6a-328b3edecabb",
+      "name": "Financeiro"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        112
+      ],
+      "id": "b6accd9f-c25d-4359-81dd-83a78590ba1d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DwnrAP1fXHs4catv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 30
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1408,
+        112
+      ],
+      "id": "cf66d16a-b0cc-405a-a8cf-146445633b61",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "TEXTO",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "VOZ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VOZ": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TEXTO": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "suporte": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financeiro": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7723d28-be3f-4173-a768-e303477bdcb1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a9754f0f2e43f4041d9d3b150be629054f61e4fec5ae16d898555f989ea901c"
+  },
+  "id": "hfZ9zs3f2YnnG2oA",
+  "tags": []
+}
