@@ -35,3 +35,32 @@ Google Calendar / Sheets = Camada de Persistência
 Webhook/Telegram = Camada de Entrada
 
 Você já está pensando certo.
+
+
+
+🏗 Estrutura Mental do Workflow (Sem montar ainda)
+
+Pense sempre em 5 camadas:
+
+1. Entrada
+2. Memória
+3. Classificação
+4. Execução
+5. Resposta
+
+
+
+inicio
+identificando_intencao
+coletando_procedimento
+coletando_data
+coletando_horario
+buscando_disponibilidade
+aguardando_escolha_horario
+validando_disponibilidade_final
+aguardando_confirmacao
+reservado_temporario
+confirmado
+expirado
+cancelado
+humano
