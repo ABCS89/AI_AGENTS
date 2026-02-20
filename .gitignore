@@ -3,3 +3,5 @@
 *.venv_*/
 *.bat
 *.env
+*.log
+*.sqlite
