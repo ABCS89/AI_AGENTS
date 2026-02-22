@@ -5,3 +5,5 @@
 *.env
 *.log
 *.sqlite
+n8n/instalar_aqui/crash.journal
+n8n/instalar_aqui/database.sqlite
