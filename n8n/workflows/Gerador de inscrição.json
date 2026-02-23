@@ -1,0 +1,300 @@
+{
+  "name": "Gerador de inscrição",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Formulário de Inscrição",
+        "formDescription": "Formulário para inscrição ao city tour",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nome",
+              "placeholder": "Informe seu nome",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "placeholder": "informe seu e-mail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Telefone",
+              "fieldType": "number",
+              "placeholder": "Informe seu telefone",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Enviar"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7111ea8c-25e4-46cd-81e2-98e83eba348b",
+      "name": "Formulário de inscrição",
+      "webhookId": "befc5921-3c5e-4615-bade-22fce404c5df"
+    },
+    {
+      "parameters": {
+        "operation": "addToDate",
+        "magnitude": "={{ $now }}",
+        "duration": 7,
+        "outputFieldName": "validade",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "6f79b47a-bb11-485c-98bd-8292c9a08ff2",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8ef84332-ac3b-4129-b195-51cf9a70761e",
+              "name": "nome",
+              "value": "={{ $('Formulário de inscrição').item.json.Nome }}",
+              "type": "string"
+            },
+            {
+              "id": "7bcbdcae-8164-4b82-bd74-a802f8b2fbf4",
+              "name": "email",
+              "value": "={{ $('Formulário de inscrição').item.json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "af728316-a801-4cf8-96e7-0ac940623485",
+              "name": "telefone",
+              "value": "={{ $('Formulário de inscrição').item.json.Telefone }}",
+              "type": "number"
+            },
+            {
+              "id": "7a80eeb9-b1d7-4f84-8ec8-b505d7929502",
+              "name": "data_atual",
+              "value": "={{ $now.format('dd/LL/yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "618522ff-7feb-4980-af19-b7f8e85b3414",
+              "name": "validade",
+              "value": "={{ $json.validade.toDateTime().format('dd/LL/yyyy') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        0
+      ],
+      "id": "9ad092ad-f771-432f-a1ab-fb8f119a50a9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1AqB7ny1PfRTl5Jmj8d-7lezmi81z5tJt1FTFNdnFVSk",
+          "mode": "list",
+          "cachedResultName": "Proposta+Turismo",
+          "cachedResultUrl": "https://docs.google.com/document/d/1AqB7ny1PfRTl5Jmj8d-7lezmi81z5tJt1FTFNdnFVSk/edit?usp=drivesdk"
+        },
+        "name": "=Ingresso {{ $json.nome }} - {{ $json.data_atual }} até {{ $json.validade }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "18DwDqxrrLGG_5mGBYv8r63SRuCjhRYv7",
+          "mode": "list",
+          "cachedResultName": "n8n-udemy",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/18DwDqxrrLGG_5mGBYv8r63SRuCjhRYv7"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        672,
+        0
+      ],
+      "id": "bded8ac5-7ed7-41db-abf0-92e491693721",
+      "name": "Copy file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BZXMSmzrgyfu3IUY",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "[nome_cliente]",
+              "replaceText": "={{ $('Edit Fields').item.json.nome }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[data_atual]",
+              "replaceText": "={{ $('Edit Fields').item.json.data_atual }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[email_cliente]",
+              "replaceText": "={{ $('Edit Fields').item.json.email }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[telefone_cliente]",
+              "replaceText": "={{ $('Edit Fields').item.json.telefone.toString() }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "[data_validade]",
+              "replaceText": "={{ $('Edit Fields').item.json.validade }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        896,
+        0
+      ],
+      "id": "4dbfbd06-b334-441e-8b00-482685b0b0b6",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "QZLz6feD2eeP7PUq",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          },
+          "fileName": "=Invite - {{ $('Edit Fields').item.json.nome }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "4d83a98d-37ff-4d0a-92cc-3211260a1b86",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BZXMSmzrgyfu3IUY",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Formulário de inscrição": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Copy file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy file": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9d6564a1-1f55-4379-8f15-eca9b3bbeb72",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a9754f0f2e43f4041d9d3b150be629054f61e4fec5ae16d898555f989ea901c"
+  },
+  "id": "4RobFwuX4TcWIagY",
+  "tags": []
+}
