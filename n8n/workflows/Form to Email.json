@@ -1,0 +1,190 @@
+{
+  "name": "Form to Email",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Onboarding Form",
+        "formDescription": "This is an onboarding form for LeftClick. fill out the fields and our team will get back to you shortly.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name",
+              "placeholder": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Last Name",
+              "placeholder": "Last Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "mail@mail.com"
+            },
+            {
+              "fieldLabel": "Phone number",
+              "placeholder": "(19) 12345-6789",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Design Preference",
+              "fieldType": "dropdown",
+              "defaultValue": "Choose",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Sleek"
+                  },
+                  {
+                    "option": "Minimalist"
+                  },
+                  {
+                    "option": "Luxurious"
+                  },
+                  {
+                    "option": "Playful"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Brand Description",
+              "placeholder": "LeftClick bulds growth systems B2B agencies & creative teams, enabling them to scale without having to manuallly reach out to prospects"
+            },
+            {
+              "fieldLabel": "Timeline",
+              "placeholder": "3-6 weeks"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Let`s get started"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "851aeed9-6490-4c0e-a0cc-5826cc27896f",
+      "name": "On form submission",
+      "webhookId": "17ced5ac-7779-4a32-98bb-50b282f269da"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Your task is to customize an email using the following data:\n\nFirst Name: {{ $json['First Name'] }}\nLast Name: {{ $json['Last Name'] }}\nEmail: {{ $json.Email }}\nPhone Number: {{ $json['Phone number'] }}\nDesign Preference: {{ $json['Design Preference'] }}\nBrand Description: {{ $json['Brand Description'] }}\nTimeline: {{ $json.Timeline }}\n\n\n--\n\nEmail Template:\n\nHey {first Name},\n\nHow are you? TThanks for submitting your onbriefing form a moment ago.\n\nI see here your number is {Phone Numer}, and your Email is {Email}.\n\nYour Design Preference is {Design Preference}.\n\nYour Brand offers {Brand Description}.\n\nYour Spectating time to start negotiaions is {Timeline}\n\nCould you let me know if I`m missing anything?\n\nThanks\nAndré\n\n--\n\nWrite it to end user like it`s me\nDon`t include the subject line"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "26b9cf32-ce70-47a3-a459-3dd2bf614c91",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "9RGJGbGqrDo6N9E0",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "andrebcs89@gmail.com",
+        "subject": "Re: Your onboarding form",
+        "emailType": "text",
+        "message": "={{ $json.output[0].content[0].text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "1cee503f-062d-4942-956a-e5da173f2ed3",
+      "name": "Send a message",
+      "webhookId": "128041ae-b4c6-46f9-ba06-05478da1ddce",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GmE3QlsYlwjQK2uj",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "First Name": "Bueno",
+          "Last Name": "Calixto",
+          "Email": "andre@bueno.com",
+          "Phone number": "(19) 98417-7781",
+          "Design Preference": "Sleek",
+          "Brand Description": "My Brand make Plataform Pumps",
+          "Timeline": "2-3 weeks",
+          "submittedAt": "2026-03-04T19:21:30.876-05:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5470a86b-becc-47bd-bbce-99e43c5daf35",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "63b9693b3bd7bedda41ea1b34119d5984c917f5ce65c2e2188b5e4f7d8d5396b"
+  },
+  "id": "Gg7AsO2xA5GUlEWa",
+  "tags": []
+}
