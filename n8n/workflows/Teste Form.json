@@ -1,0 +1,226 @@
+{
+  "name": "Teste Form",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Briefing de Carreira",
+        "formDescription": "Cadastro inicial de informações de especialidade.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nome",
+              "placeholder": "André"
+            },
+            {
+              "fieldLabel": "Sobrenome",
+              "placeholder": "Bueno"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "seu@email.com"
+            },
+            {
+              "fieldLabel": "Contato",
+              "placeholder": "(19) 12345-6789"
+            },
+            {
+              "fieldLabel": "Área de Atuação",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Medicina Vascular"
+                  },
+                  {
+                    "option": "Saúde Corporal"
+                  },
+                  {
+                    "option": "Saúde Mental"
+                  },
+                  {
+                    "option": "Clinica Geral"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Let's get Started"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4aa10fd9-d6a4-46e7-9d4d-965b56c0d788",
+      "name": "On form submission",
+      "webhookId": "11dca444-79e6-4e32-a773-936ddf0ea1e7"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Você é um auxiliador na criação de um texto de email\nUse os dados encaminhados pelo formulário para escrever um email como se fosse eu escrevendo, e não inclua o Assunto no texto.\n\nNome:{{ $json.Nome }}\nSobrenome: {{ $json.Sobrenome }}\nEmail: {{ $json.Email }}\nContato: {{ $json.Contato }}\nÁrea de Atuação: {{ $json['Área de Atuação'] }}\n\n\n-- \nTemplate do Email\n\nOlá, {Nome} você acabou de se increver no sistema da Docs.com para auxilio com sua carreira.\n\nSeu email é {Email}, e seu contato é {Contato}, e sua area de atuação é {Área de Atuação}.\n\nMe avise se estiver esquecendo alguma informação.\n\nGrato.\n\nDocs.com Team\n\n\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "9fc5e2fc-601f-4487-923f-e12cb1cdf672",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zc7R4inPPCCbGz6r",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "Re: Confirmação de dados Docs.com",
+        "emailType": "text",
+        "message": "={{ $json.output[0].content[0].text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "546da176-0459-4671-8666-af7b9166b019",
+      "name": "Send a message",
+      "webhookId": "7b985714-4203-410f-a746-9bc0c34ccf6c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "No4gJqoypGeNeXni",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const numero = $json[\"Phone number\"].toString().replace(/\\D/g, '');\n\nconst formatado =\n  '(' + numero.slice(0,2) + ') ' +\n  numero.slice(2,7) + '-' +\n  numero.slice(7);\n\nreturn [\n{\n  ...$json,\n  contato_formatado: formatado\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        192
+      ],
+      "id": "79dfcbd5-b57d-40ef-be2c-a85b4bb1bed6",
+      "name": "Edit numero telefone"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1b6d53e-4191-4d8b-b89b-8b56253d0ee6",
+              "name": "Contato",
+              "value": "={{ '(' + $json.Contato.slice(0,2) + ') ' + $json.Contato.slice(2,7) + '-' + $json.Contato.slice(7) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": "={{ '(' + $json.Contato.slice(0,2) + ') ' + $json.Contato.slice(2,7) + '-' + $json.Contato.slice(7) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "d7b6220a-ff51-43b3-9cdb-15a1eaa4b460",
+      "name": "Edit Numero telefone"
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Nome": "André",
+          "Sobrenome": "Bueno",
+          "Email": "andrebcs89@gmail.com",
+          "Contato": "19984177781",
+          "Área de Atuação": "Saúde Mental",
+          "submittedAt": "2026-03-05T06:52:49.654-05:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Numero telefone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Numero telefone": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "441d61c1-f667-4bd7-91ce-a3e8c4bc8eae",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "db5ddba930afb3734937df6eef850f5a709d4d7ddd6d6c6320ef18b0daeb9d99"
+  },
+  "id": "KAc2HGUJq_HkNfhHhYd0_",
+  "tags": []
+}

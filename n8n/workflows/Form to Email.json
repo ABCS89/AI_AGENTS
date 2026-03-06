@@ -50,7 +50,7 @@
             },
             {
               "fieldLabel": "Brand Description",
-              "placeholder": "LeftClick bulds growth systems B2B agencies & creative teams, enabling them to scale without having to manuallly reach out to prospects"
+              "placeholder": "LeftClick bulds growth systems B2B agencies & creative teams, enabling them to scale without having to manually reach out to prospects"
             },
             {
               "fieldLabel": "Timeline",
@@ -67,11 +67,11 @@
       "typeVersion": 2.3,
       "position": [
         0,
-        0
+        -48
       ],
-      "id": "851aeed9-6490-4c0e-a0cc-5826cc27896f",
+      "id": "6d2ff285-b350-47fd-bef7-3c976d12509b",
       "name": "On form submission",
-      "webhookId": "17ced5ac-7779-4a32-98bb-50b282f269da"
+      "webhookId": "ba64aa33-0559-4cd4-9a56-29c62b280472"
     },
     {
       "parameters": {
@@ -83,7 +83,7 @@
         "responses": {
           "values": [
             {
-              "content": "=Your task is to customize an email using the following data:\n\nFirst Name: {{ $json['First Name'] }}\nLast Name: {{ $json['Last Name'] }}\nEmail: {{ $json.Email }}\nPhone Number: {{ $json['Phone number'] }}\nDesign Preference: {{ $json['Design Preference'] }}\nBrand Description: {{ $json['Brand Description'] }}\nTimeline: {{ $json.Timeline }}\n\n\n--\n\nEmail Template:\n\nHey {first Name},\n\nHow are you? TThanks for submitting your onbriefing form a moment ago.\n\nI see here your number is {Phone Numer}, and your Email is {Email}.\n\nYour Design Preference is {Design Preference}.\n\nYour Brand offers {Brand Description}.\n\nYour Spectating time to start negotiaions is {Timeline}\n\nCould you let me know if I`m missing anything?\n\nThanks\nAndré\n\n--\n\nWrite it to end user like it`s me\nDon`t include the subject line"
+              "content": "=Your task is to customize an email template using the following data:\n\nFirst Name: {{ $json['First Name'] }}\nLast Name: {{ $json['Last Name'] }}\nEmail: {{ $json.Email }}\nPhone Number: {{ $json.contato_formatado }}\nDesign Preference: {{ $json['Design Preference'] }}\nBrand Description: {{ $json['Brand Description'] }}\nTimeline: {{ $json.Timeline }}\n\n\n--\n\nEmail Template:\n\nHey {first Name},\n\nHow are you? Thanks for submitting your onboarding form a moment ago.\n\nI loved reading about how {paraphrase Brand Description}\n\nI see here you're looking for {Design Preference} sort of site and you looking have done in {Timeline}\n\n\nWould you confirming your number and email for me one last time {contato_formatado} and {Email}, right?\n\nThanks\nDocs.com\n\n--\n\nWrite it to end user like it`s me\nDon`t include the subject line"
             }
           ]
         },
@@ -93,14 +93,14 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        208,
-        0
+        448,
+        -48
       ],
-      "id": "26b9cf32-ce70-47a3-a459-3dd2bf614c91",
+      "id": "75501aca-8425-4b07-8b15-f7a6473c240a",
       "name": "Message a model",
       "credentials": {
         "openAiApi": {
-          "id": "9RGJGbGqrDo6N9E0",
+          "id": "zc7R4inPPCCbGz6r",
           "name": "OpenAi account"
         }
       }
@@ -108,7 +108,7 @@
     {
       "parameters": {
         "sendTo": "andrebcs89@gmail.com",
-        "subject": "Re: Your onboarding form",
+        "subject": "Re: Subject",
         "emailType": "text",
         "message": "={{ $json.output[0].content[0].text }}",
         "options": {
@@ -118,42 +118,70 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        560,
-        0
+        1024,
+        -48
       ],
-      "id": "1cee503f-062d-4942-956a-e5da173f2ed3",
+      "id": "b8550684-c75c-4ad8-9e2d-550737f38dac",
       "name": "Send a message",
-      "webhookId": "128041ae-b4c6-46f9-ba06-05478da1ddce",
+      "webhookId": "1093138c-c831-4e29-b1aa-41efb4f62782",
       "credentials": {
         "gmailOAuth2": {
-          "id": "GmE3QlsYlwjQK2uj",
+          "id": "No4gJqoypGeNeXni",
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "const numero = $json[\"Phone number\"].toString().replace(/\\D/g, '');\n\nconst formatado =\n  '(' + numero.slice(0,2) + ') ' +\n  numero.slice(2,7) + '-' +\n  numero.slice(7);\n\nreturn [\n{\n  ...$json,\n  contato_formatado: formatado\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -48
+      ],
+      "id": "f4b23f14-e3aa-4f9c-8039-dbdffea92bc8",
+      "name": "Edit Phone Number"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        -48
+      ],
+      "id": "7b2ec8a4-4271-4854-8964-9d29d5fb386b",
+      "name": "Wait",
+      "webhookId": "61b8aea9-18ce-4a4b-9fda-26d0cc3a47fe"
     }
   ],
-  "pinData": {
-    "On form submission": [
-      {
-        "json": {
-          "First Name": "Bueno",
-          "Last Name": "Calixto",
-          "Email": "andre@bueno.com",
-          "Phone number": "(19) 98417-7781",
-          "Design Preference": "Sleek",
-          "Brand Description": "My Brand make Plataform Pumps",
-          "Timeline": "2-3 weeks",
-          "submittedAt": "2026-03-04T19:21:30.876-05:00",
-          "formMode": "test"
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Phone Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Phone Number": {
       "main": [
         [
           {
@@ -164,7 +192,7 @@
         ]
       ]
     },
-    "Message a model": {
+    "Wait": {
       "main": [
         [
           {
@@ -178,13 +206,14 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "availableInMCP": false
   },
-  "versionId": "5470a86b-becc-47bd-bbce-99e43c5daf35",
+  "versionId": "647f8ff7-e2be-4339-adb7-a05cf65d4d4d",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "63b9693b3bd7bedda41ea1b34119d5984c917f5ce65c2e2188b5e4f7d8d5396b"
+    "instanceId": "db5ddba930afb3734937df6eef850f5a709d4d7ddd6d6c6320ef18b0daeb9d99"
   },
-  "id": "Gg7AsO2xA5GUlEWa",
+  "id": "CvN4LvgpSrqNhpCoJz0l9",
   "tags": []
 }
