@@ -1,0 +1,766 @@
+{
+  "name": "Telegram - gerente de eventos - google calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        32,
+        128
+      ],
+      "id": "ecd9f10a-b0fc-4dd5-b3ad-942c9b1d458a",
+      "name": "Telegram Trigger",
+      "webhookId": "502d1ea7-9876-4285-93ef-48f268392099",
+      "credentials": {
+        "telegramApi": {
+          "id": "VJPPtVoVbpY74BbC",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Edit Fields').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=# Visão Geral\nVocê é um assistente de calendário. Suas responsabilidades incluem criar, \nobter e excluir eventos no calendário do usuário.\n\n**Ferramentas de Gerenciamento de Calendário**\n- Use \"Criar Evento com Participante\" quando um evento incluir um participante.\n- Use \"Criar Evento\" para eventos individuais.\n- Use \"Obter Eventos\" para buscar horários do calendário quando solicitado.\n- Use \"Excluir Evento\" para excluir um evento. Você deve usar \"Obter Eventos\" \n  primeiro para obter o ID do evento a ser excluído.\n- Use \"Atualizar Evento\" para atualizar um evento. Você deve usar \"Obter Eventos\" \n  primeiro para obter o ID do evento a ser atualizado.\n\n## Notas Finais\n- Aqui está a data/hora atual: {{ $now }} \n- Se a duração de um evento não for especificada, assuma que será de uma hora."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1792,
+        128
+      ],
+      "id": "7ca68857-e2ad-4e00-9330-2a27c0618430",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        352
+      ],
+      "id": "1635640f-7a9e-49b4-a13a-976df575b916",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "bidwfyyRJ7C9wxpU",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        352
+      ],
+      "id": "e9b8fed2-dc8a-425d-a268-8aaaf19dfc9a",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields').item.json.telefone }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1728,
+        352
+      ],
+      "id": "5f4fdb22-518a-494e-8afa-7e0126a1caf3",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "andrebcs89@gmail.com",
+          "mode": "list",
+          "cachedResultName": "andrebcs89@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', `o dia sucessor à data que o usuário está solicitando`, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', `o dia anterior à data que o usuário está solicitando`, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1984,
+        352
+      ],
+      "id": "3ec91f05-1ac3-4ba3-8ab4-6d4afe1d6bed",
+      "name": "Obter Eventos",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "oCBN7apCsoRXLAII",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "andrebcs89@gmail.com",
+          "mode": "list",
+          "cachedResultName": "andrebcs89@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Início do Evento`, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `Final do Evento`, 'string') }}",
+        "additionalFields": {
+          "attendees": [],
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Título do Evento`, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2112,
+        352
+      ],
+      "id": "dc44e884-f8fa-4383-bf2e-7471bdeff472",
+      "name": "Criar Evento",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "oCBN7apCsoRXLAII",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2fcb9a45-dece-4ad7-8f44-86af08cdd0b2",
+              "name": "telefone",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "9a8969c9-b10c-496c-813a-9566573cdd67",
+              "name": "message.text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        128
+      ],
+      "id": "e2e3e2d5-b71c-4d14-86f7-ac93bd9f28f7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "extendedTextMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "408498ba-db44-43f0-8d9f-5c9d4d972eb1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dc6afcfb-8f62-434b-bcf8-e108a033ede0",
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c2db6a87-24e5-4478-8338-52a8c41b0054",
+                    "leftValue": "={{ $json.message.photo }}",
+                    "rightValue": "imageMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "imagem"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        480,
+        112
+      ],
+      "id": "d8bbbc9e-9a03-4faa-abc7-67c277790dda",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d73651c-afc1-4a39-bbbf-1108449c6c85",
+              "name": "base64",
+              "value": "={{ $('Webhook').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        704,
+        128
+      ],
+      "id": "86a9492d-36eb-40db-b8dd-82ab3ebdb2c4",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {
+          "fileName": "file.ogg",
+          "mimeType": "application/ogg"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        128
+      ],
+      "id": "b60d11b7-e552-4f7d-8b56-43ff923456bb",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1152,
+        128
+      ],
+      "id": "754a4b86-d557-4931-8904-63e6314b3097",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "bidwfyyRJ7C9wxpU",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "80ad7337-7d4e-4e3b-a0c9-483144d90be8",
+              "name": "mensagem",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        128
+      ],
+      "id": "b4066262-0ef5-4a49-a0ab-d9aa59b5e756",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5b301c9-ce64-4e07-9eb4-43407588f89a",
+              "name": "base64",
+              "value": "={{ $('Webhook').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        704,
+        320
+      ],
+      "id": "dfd5bbd0-64fe-4f4d-be36-cc13ea85726b",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {
+          "fileName": "file.png",
+          "mimeType": "image/png"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        320
+      ],
+      "id": "e73a1375-7669-4357-b969-575456ad4b6d",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "Descreva todo o conteudo da imagem. Responda sem acento, sem hifens",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1152,
+        320
+      ],
+      "id": "59793692-9da1-4ed8-81f5-0daaee7a120b",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "bidwfyyRJ7C9wxpU",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4df0c8a-7940-43d7-a6be-c7f79f0753e8",
+              "name": "mensagem",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        320
+      ],
+      "id": "cac462d9-b540-4144-b7ab-e8c31532365c",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Edit Fields').item.json.telefone }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2320,
+        128
+      ],
+      "id": "18415a98-3d87-430f-8e8b-a962a62da7b3",
+      "name": "Send a text message",
+      "webhookId": "e94a9eae-e132-4f02-8950-42d3c5519f2b",
+      "credentials": {
+        "telegramApi": {
+          "id": "VJPPtVoVbpY74BbC",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e10a3ed-92d0-4c81-80c8-de328fd844fb",
+              "name": "message.text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        704,
+        -64
+      ],
+      "id": "895082a8-8685-432f-8ea3-0090f3f6aba2",
+      "name": "Texto recebido"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Remover evento.",
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "andrebcs89@gmail.com",
+          "mode": "list",
+          "cachedResultName": "andrebcs89@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `Deletar evento.`, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2272,
+        336
+      ],
+      "id": "549f8943-46f0-4618-bd58-daabbddaee2f",
+      "name": "excluir evento",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "oCBN7apCsoRXLAII",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obter Eventos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Texto recebido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto recebido": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "excluir evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "ea88f72a-54bd-4813-b850-cc115cb693aa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d4d5b328085b1091a6264d68f2270e256567bd9ee28841de65ff01fd92866aa"
+  },
+  "id": "bbUSXdtjIkC2YaYXeePpw",
+  "tags": []
+}
