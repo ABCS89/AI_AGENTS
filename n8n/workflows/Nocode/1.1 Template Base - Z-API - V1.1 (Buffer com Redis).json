@@ -3,21 +3,22 @@
   "nodes": [
     {
       "parameters": {
+        "model": "gpt-4.1-nano",
         "options": {
           "temperature": 0.4
         }
       },
-      "id": "bed33428-07ca-46d1-87df-e49491fe4cf9",
+      "id": "6b93b95a-bf7f-4a96-821b-ccc7cf7b07a2",
       "name": "OpenAI Chat Model2",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        4240,
-        1024
+        4192,
+        1184
       ],
       "credentials": {
         "openAiApi": {
-          "id": "GWsyXFl2bFxLd1hG",
+          "id": "W14tv5NcZywvGScP",
           "name": "OpenAi account"
         }
       },
@@ -43,7 +44,7 @@
         1296,
         800
       ],
-      "id": "fdb7f4b9-88e5-46cc-92a0-61c33f64ed62",
+      "id": "dad54d07-dcb3-4f1a-ae78-19a1c3123d58",
       "name": "Mensagem1",
       "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
     },
@@ -60,7 +61,7 @@
           ]
         }
       },
-      "id": "d5b9baa3-0b97-4337-a815-8e0087132670",
+      "id": "c96dc42e-774d-457f-be8a-ae056ddcc046",
       "name": "Encontrar Cliente1",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
@@ -71,7 +72,7 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "FggPiTdF5TZ9EBKy",
+          "id": "zMsn1bUV85HRl7ue",
           "name": "Supabase account"
         }
       },
@@ -102,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "595cac88-5ec5-4748-b979-6c7ec004c3ed",
+      "id": "4c3cd5bf-1243-42f0-b755-c06351bb5954",
       "name": "Cliente Existe?1",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.1,
@@ -129,7 +130,7 @@
           ]
         }
       },
-      "id": "78564a7c-448f-49bb-aa52-924c1140c819",
+      "id": "3aae2b1b-2bfc-4add-adc2-fc9c51914304",
       "name": "Criar Cliente1",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
@@ -139,7 +140,7 @@
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "FggPiTdF5TZ9EBKy",
+          "id": "zMsn1bUV85HRl7ue",
           "name": "Supabase account"
         }
       },
@@ -147,7 +148,7 @@
     },
     {
       "parameters": {},
-      "id": "892a4c17-98f7-495a-b5de-659dcedf9a00",
+      "id": "0b1448a6-0d32-4d9a-a038-ea8d4a46c382",
       "name": "Merge1",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
@@ -155,25 +156,6 @@
         3888,
         800
       ],
-      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $('Mensagem Bufferizada').item.json.Mensagens }}",
-        "options": {
-          "systemMessage": "=# Instruções\nVocê é um agente de suporte e vendas da NoCode StartUp, um ecossistema de ensino de tecnologias IA e NoCode, com formações, comunidade e hub de contratações de profissionais, com grande foco na criação de Agentes de Inteligência Artificial.\nAdicione emojis em suas respostas.\n\n# Restrições\n- Adapte o fluxo da conversa conforme as necessidades do usuário, porém evite responder perguntas fora do seu papel, atenha-se a suas <instruções> e função;\n- Nunca invente informações, atenha-se apenas as suas informações fornecidas;\n- Responda apenas com informações que você sabe e tem certeza;\n- Responda o usuário no idioma que ele estiver falando;\n- Nunca envie links coletados da base vetorial;\n\n# Variáveis\nData atual: {{ $now }}\n\n\n# Contexto Extra"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.8,
-      "position": [
-        4320,
-        800
-      ],
-      "id": "082d81a4-58e5-48c7-8d75-e236fb46fa7e",
-      "name": "AI Agent1",
-      "retryOnFail": true,
       "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
     },
     {
@@ -231,7 +213,7 @@
         },
         "options": {}
       },
-      "id": "aa2b610d-7e08-4ada-ba91-21bf693ee07f",
+      "id": "f5451181-04b9-48b7-8fd3-c76adb5e67d7",
       "name": "Filtro Inicial1",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.1,
@@ -254,7 +236,7 @@
         96,
         576
       ],
-      "id": "d4295500-3e24-4a54-a8be-c4d4f32d2ee3",
+      "id": "c2de7def-26f2-49c7-a94f-44dd128cd4dd",
       "name": "Sticky Note2"
     },
     {
@@ -270,7 +252,7 @@
         464,
         576
       ],
-      "id": "a05e51ed-12cf-45ee-9500-b2af14866703",
+      "id": "4ae05fc4-fd49-42cc-91ed-11755830e6e4",
       "name": "Sticky Note4"
     },
     {
@@ -286,7 +268,7 @@
         816,
         576
       ],
-      "id": "d0ad23f4-a9af-45b8-b3a1-001f19c1ea42",
+      "id": "3605087c-77f6-4067-801c-38b02a8c47f6",
       "name": "Sticky Note5"
     },
     {
@@ -302,7 +284,7 @@
         3040,
         576
       ],
-      "id": "697f2bde-7405-45dd-8902-d8ccb2a51a8f",
+      "id": "c736728e-0747-41bb-ad11-d67cc08b2168",
       "name": "Sticky Note7"
     },
     {
@@ -315,10 +297,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1184,
+        1168,
         576
       ],
-      "id": "493380a2-8d4c-4a96-a3ed-2681a581e9c0",
+      "id": "df902d6c-4710-4357-bbca-2bd0e495ebb1",
       "name": "Sticky Note10"
     },
     {
@@ -334,7 +316,7 @@
         4144,
         576
       ],
-      "id": "ece58ffd-97f3-4fdb-9557-d00a656b5f53",
+      "id": "8e30e37a-9cdd-458b-bbbb-3d366ffea78b",
       "name": "Sticky Note11"
     },
     {
@@ -350,7 +332,7 @@
         0,
         0
       ],
-      "id": "15a9232f-db2e-4c9c-8129-44f39fe2e8a2",
+      "id": "065a2eb9-0547-4567-bd56-8b351e66ea96",
       "name": "Sticky Note14"
     },
     {
@@ -373,7 +355,7 @@
         },
         "options": {}
       },
-      "id": "bbfd1520-0eda-4ef5-905d-e0ed948cdf41",
+      "id": "311f4a61-698d-45ee-924d-f87c33a47502",
       "name": "Dados Lead",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -396,7 +378,7 @@
         880,
         704
       ],
-      "id": "11f1b879-4ae7-4956-a2db-2b0b5f02da41",
+      "id": "967266e0-60ce-4aa6-bd29-b87feb607600",
       "name": "Sticky Note"
     },
     {
@@ -412,7 +394,7 @@
         544,
         704
       ],
-      "id": "767b88e9-4e42-4ff6-bef9-711483fd230d",
+      "id": "e772ffb0-e675-4708-94e1-2b10c8d6ce3c",
       "name": "Sticky Note1"
     },
     {
@@ -426,7 +408,7 @@
         4608,
         1216
       ],
-      "id": "57762048-b196-4bd5-90a9-d80f595d4d26",
+      "id": "7404d535-7b2a-45d4-9ccd-eb3a8a8c55f6",
       "name": "Simple Memory"
     },
     {
@@ -442,7 +424,7 @@
         4736,
         576
       ],
-      "id": "ec376535-b4a1-401d-92f3-e9f247319509",
+      "id": "fd21c1b2-00cb-41cf-b061-9aaf4ec33e15",
       "name": "Sticky Note12"
     },
     {
@@ -453,7 +435,7 @@
         5088,
         800
       ],
-      "id": "b27c165a-64a8-4d93-b092-7bc41971f34f",
+      "id": "fc46bd99-f01b-43f2-bbdd-ea183c757d60",
       "name": "No Operation, do nothing"
     },
     {
@@ -469,7 +451,7 @@
         4256,
         736
       ],
-      "id": "c92bb08c-58b6-45a8-b5b3-e3fd167892bf",
+      "id": "c3058650-3599-4a82-8a46-ebdb2203f157",
       "name": "Sticky Note21"
     },
     {
@@ -485,7 +467,7 @@
         1232,
         704
       ],
-      "id": "6e740cca-d3bd-42a5-8a88-a86c4c8b3d18",
+      "id": "d741c6af-d9fc-4c0d-8ac4-55d4b4fe400c",
       "name": "Sticky Note3"
     },
     {
@@ -500,7 +482,7 @@
         192,
         800
       ],
-      "id": "3e13f742-77cf-4903-b4bb-cfe77dc110ce",
+      "id": "37de9675-f10d-4659-bfd1-33ecd619e73e",
       "name": "Webhook",
       "webhookId": "9c999047-c050-412e-9f87-6c899d49d423"
     },
@@ -531,11 +513,11 @@
         4848,
         800
       ],
-      "id": "4beb5514-62c2-4e51-957f-cd4159633a33",
+      "id": "9f800a80-90a0-4efb-a350-cea8f2357446",
       "name": "HTTP Request",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "K2BDtU34Ap3pB3ej",
+          "id": "rC9u9704d3gRcRlR",
           "name": "Header Auth account"
         }
       }
@@ -552,7 +534,7 @@
         224,
         16
       ],
-      "id": "78ce88e7-c152-46af-a6d9-7b5055bc09f6",
+      "id": "64787b9f-8a55-4306-8c22-c7351ec04d49",
       "name": "Sticky Note27"
     },
     {
@@ -567,7 +549,7 @@
         32,
         16
       ],
-      "id": "8bd6b351-bc84-4a76-8078-ada7ac543ff8",
+      "id": "04e30ad5-bc5f-4cb9-9ba4-34b382b7b00c",
       "name": "Sticky Note28"
     },
     {
@@ -583,7 +565,7 @@
         400,
         80
       ],
-      "id": "807ec8f4-3f66-419e-8b84-debab3e8e8f8",
+      "id": "cde5e5a6-0a06-43c5-a67b-107b4b03cb20",
       "name": "Sticky Note26"
     },
     {
@@ -599,29 +581,8 @@
         96,
         256
       ],
-      "id": "a0899ac7-8a0e-4530-a54b-4bc92b424850",
+      "id": "d633d403-324d-4a84-bf17-ff81f85fc32b",
       "name": "Sticky Note20"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Dados Lead').item.json.IdConversa }}",
-        "contextWindowLength": 20
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-      "typeVersion": 1.3,
-      "position": [
-        4416,
-        1056
-      ],
-      "id": "7e332cd3-4438-4267-89b5-a7f49cf7ab11",
-      "name": "Postgres Chat Memory",
-      "credentials": {
-        "postgres": {
-          "id": "n7Lfwc7g1NGZmpV2",
-          "name": "Postgres account"
-        }
-      }
     },
     {
       "parameters": {
@@ -633,7 +594,7 @@
         2064,
         800
       ],
-      "id": "c75613de-6fa0-45f0-ad74-a5801c624981",
+      "id": "d901fa82-6164-43bb-a824-634d2414aabb",
       "name": "Wait",
       "webhookId": "05557399-04f1-43c4-bbf1-e47a23bf735e"
     },
@@ -650,34 +611,12 @@
         1856,
         800
       ],
-      "id": "f5ceea99-1824-430c-b9a7-1b8ab5ff748e",
+      "id": "d2e5a150-1f7b-47a3-9043-30730a06e5dd",
       "name": "Redis Buffer 1",
       "credentials": {
         "redis": {
-          "id": "LAUZvu9kWIJIJZ0e",
-          "name": "Redis account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "push",
-        "list": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
-        "messageData": "={{ $json.Mensagem }}",
-        "tail": true
-      },
-      "type": "n8n-nodes-base.redis",
-      "typeVersion": 1,
-      "position": [
-        1648,
-        800
-      ],
-      "id": "5fa9e44d-9beb-425d-8589-0936553db523",
-      "name": "Redis coletor de mensagem",
-      "credentials": {
-        "redis": {
-          "id": "LAUZvu9kWIJIJZ0e",
-          "name": "Redis account"
+          "id": "L8rAjoTBGpLT6bk8",
+          "name": "Redis"
         }
       }
     },
@@ -713,8 +652,9 @@
         2512,
         800
       ],
-      "id": "ca8bbe21-0dc6-42d9-9a3c-23a304f5c721",
-      "name": "If"
+      "id": "410c92fe-f37a-45bc-b34a-90a2156187ed",
+      "name": "If",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -729,12 +669,12 @@
         2304,
         800
       ],
-      "id": "db6ad0a6-f9e7-42c7-996a-ceea32f5a64d",
+      "id": "55c9e680-e5d8-4ad3-a895-2c6f8ad82c6e",
       "name": "Redis Buffer 2",
       "credentials": {
         "redis": {
-          "id": "LAUZvu9kWIJIJZ0e",
-          "name": "Redis account"
+          "id": "L8rAjoTBGpLT6bk8",
+          "name": "Redis"
         }
       }
     },
@@ -746,7 +686,7 @@
         2512,
         1072
       ],
-      "id": "8195a7c8-ff72-4d0f-b650-5c5ba490a75c",
+      "id": "16c2f191-8f37-4709-87b6-2ae77f119a98",
       "name": "No Operation, do nothing1"
     },
     {
@@ -771,7 +711,7 @@
         2928,
         800
       ],
-      "id": "15a82ad2-b286-452a-a5c6-00cc38ae9bfc",
+      "id": "0b5c451b-cea6-426b-8069-25f44061bb96",
       "name": "Mensagem Bufferizada"
     },
     {
@@ -785,12 +725,100 @@
         2720,
         784
       ],
-      "id": "b3365fd7-bf16-4053-a8f9-60929c6a3cd9",
+      "id": "612ffa25-a1ee-4373-ab0a-a50947e93e08",
       "name": "Redis",
       "credentials": {
         "redis": {
-          "id": "LAUZvu9kWIJIJZ0e",
-          "name": "Redis account"
+          "id": "L8rAjoTBGpLT6bk8",
+          "name": "Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "messageData": "={{ $json.Mensagem }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        800
+      ],
+      "id": "643c6930-56ea-4df8-b2a0-fea216d1cf22",
+      "name": "Redis1",
+      "credentials": {
+        "redis": {
+          "id": "L8rAjoTBGpLT6bk8",
+          "name": "Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Dados Lead').item.json.IdConversa }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        4400,
+        1184
+      ],
+      "id": "587aa4da-2f82-4272-9643-555d53544e4a",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "rpd8Zkb5JPry0bcD",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Mensagem Bufferizada').item.json.Mensagens }}",
+        "options": {
+          "systemMessage": "# Instruções\nVocê é um agente de suporte e vendas da NoCode StartUp, um ecossistema de ensino de tecnologias IA e NoCode, com formações, comunidade e hub de contratações de profissionais, com grande foco na criação de Agentes de Inteligência Artificial.\nAdicione emojis em suas respostas.\n\n# Restrições\n- Adapte o fluxo da conversa conforme as necessidades do usuário, porém evite responder perguntas fora do seu papel, atenha-se a suas <instruções> e função;\n- Nunca invente informações, atenha-se apenas as suas informações fornecidas;\n- Responda apenas com informações que você sabe e tem certeza;\n- Responda o usuário no idioma que ele estiver falando;\n- Nunca envie links coletados da base vetorial;\n\n# Variáveis\nData atual: {{ $now }}\n\n\n# Contexto Extra"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        4320,
+        784
+      ],
+      "id": "efeb1df3-7786-41af-842b-eaf2b855ac49",
+      "name": "AI Agent2",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        4192,
+        992
+      ],
+      "id": "5222ad81-8abe-43df-a675-0412781b38ec",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "W14tv5NcZywvGScP",
+          "name": "OpenAi account"
         }
       }
     }
@@ -801,7 +829,7 @@
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent1",
+            "node": "AI Agent2",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -812,7 +840,7 @@
       "main": [
         [
           {
-            "node": "Redis coletor de mensagem",
+            "node": "Redis1",
             "type": "main",
             "index": 0
           }
@@ -863,18 +891,7 @@
       "main": [
         [
           {
-            "node": "AI Agent1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent1": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
+            "node": "AI Agent2",
             "type": "main",
             "index": 0
           }
@@ -925,17 +942,6 @@
         ]
       ]
     },
-    "Postgres Chat Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Wait": {
       "main": [
         [
@@ -952,17 +958,6 @@
         [
           {
             "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Redis coletor de mensagem": {
-      "main": [
-        [
-          {
-            "node": "Redis Buffer 1",
             "type": "main",
             "index": 0
           }
@@ -1019,24 +1014,63 @@
           }
         ]
       ]
+    },
+    "Redis1": {
+      "main": [
+        [
+          {
+            "node": "Redis Buffer 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1",
+    "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "40070f0c-7f33-498e-9e83-c6d7b141a147",
+  "versionId": "89f41342-c002-4d36-9fb7-26590e9d7a5f",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "138120062998fccd17f9aeb6ccf18fe7b5ff5ac487d5ef3b8c159b54a2b49b9d"
+    "instanceId": "c601b0b80d0649e25e92633a4f8639ab5ca89bd50419f6d4ce4cf54e2abce70e"
   },
-  "id": "yYGhqIEdM8nFZjSTr1HVG",
+  "id": "DcVYhsQnJ72gzDk3",
   "tags": [
     {
-      "updatedAt": "2026-03-27T16:40:27.980Z",
-      "createdAt": "2026-03-27T16:40:27.980Z",
-      "id": "yJqExIWEcU3uSaiN",
+      "updatedAt": "2026-03-29T22:59:36.524Z",
+      "createdAt": "2026-03-29T22:59:36.524Z",
+      "id": "5WAEbK5jp8BfkMU2",
       "name": "NoCode StartUp"
     }
   ]
