@@ -1,0 +1,1785 @@
+{
+  "name": "Template Base - Z-API - V1.4 (Central de controle de parâmetros)",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "temperature": "={{ $('ECU').item.json.temperatura_modelo }}"
+        }
+      },
+      "id": "2cda220b-7018-46d4-aed1-5b8b4cbee2cb",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        5632,
+        1136
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "jsBMGlGDKDgZkivj",
+          "name": "OpenAI account"
+        }
+      },
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "usuarios",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "lead_id",
+              "keyValue": "={{ $('Dados Lead').item.json.IdConversa }}"
+            }
+          ]
+        }
+      },
+      "id": "4c376b19-abdb-4093-9803-db7664950a14",
+      "name": "Encontrar Cliente1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4576,
+        800
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "e15mU9wuYGiuzPaV",
+          "name": "Supabase account"
+        }
+      },
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "3419c30f-4400-401b-bf40-db1579507f96",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5b8ad0bc-ad2a-4ac0-8db5-22945b369b6b",
+      "name": "Cliente Existe?1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        4800,
+        800
+      ],
+      "alwaysOutputData": false,
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "tableId": "usuarios",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "lead_nome",
+              "fieldValue": "={{ $('Dados Lead').item.json.LeadNome }}"
+            },
+            {
+              "fieldId": "lead_id",
+              "fieldValue": "={{ $('Dados Lead').item.json.IdConversa }}"
+            }
+          ]
+        }
+      },
+      "id": "eda2d971-0fd0-48e7-8400-9e65826d8b0e",
+      "name": "Criar Cliente1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5024,
+        944
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "e15mU9wuYGiuzPaV",
+          "name": "Supabase account"
+        }
+      },
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {},
+      "id": "9e387c68-81cb-49f6-8abe-5d4d00d2bc34",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        5248,
+        800
+      ],
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "content": "## Gatilho\nChat Trigger, WhatsApp, Instagram, Telegram, Messenger, etc..",
+        "height": 540,
+        "width": 340,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        576
+      ],
+      "id": "29905e62-2033-46e4-8557-6f5d131caf6c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Filtros Iniciais\nPara evitar que fluxo seja executado quando não queremos",
+        "height": 540,
+        "width": 340,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        464,
+        576
+      ],
+      "id": "43ebcddb-9a47-4e4f-b053-289f465e55d7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Dados do Lead\nInformações principais sobre o lead",
+        "height": 540,
+        "width": 340,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        816,
+        576
+      ],
+      "id": "c0883439-9bd6-4790-a302-91b464116b9e",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Registro do Lead no banco de dados (Supabase)\nFluxo para adição do lead no banco de dados postgrees supabase.",
+        "height": 540,
+        "width": 1080,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4416,
+        592
+      ],
+      "id": "f18df0f9-f0a2-41f3-a824-562cd7cdae30",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Mensagem para o Agente\nMensagem final do usuário para o agente",
+        "height": 540,
+        "width": 340,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4048,
+        592
+      ],
+      "id": "4731e266-6310-4c6e-ac0d-b517ce09067b",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## Agente de IA\nAgente inteligente com memória e prompt pré formatado",
+        "height": 760,
+        "width": 580,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5520,
+        592
+      ],
+      "id": "224b0f7c-97f1-43fc-8d35-4b196ef5dd56",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 1356,
+        "width": 7020,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        16
+      ],
+      "id": "46535abe-3988-4e3a-a577-d4240f010eda",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9f488c5c-0b3b-48e9-87b1-5a22d513d1ec",
+              "name": "IdConversa",
+              "value": "={{ $('Webhook').item.json.body.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "69f6217f-9063-423f-abf4-e94f6b70f94e",
+              "name": "LeadNome",
+              "value": "={{ $('Webhook').item.json.body.senderName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "01335399-95e6-4751-9a71-09b4a5094901",
+      "name": "Dados Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        944,
+        800
+      ],
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "content": "Ajuste o Node Set com os campos relevantes fornecidos.\n",
+        "height": 280,
+        "width": 210,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        704
+      ],
+      "id": "e9a75496-1c57-486b-8b61-a84992043959",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Ajustes os filtros necessários conforme seu gatilho de entrada",
+        "height": 280,
+        "width": 190,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        544,
+        704
+      ],
+      "id": "cf45f678-2f95-4070-83b0-d00d82b76bed",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Envio das Respostas ao Usuário\nEnvio das mensagens para o usuário",
+        "height": 540,
+        "width": 560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        6128,
+        592
+      ],
+      "id": "546b17b7-10fa-47eb-accf-34a11b87f5c0",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        6480,
+        816
+      ],
+      "id": "94ee55a7-9e47-4878-afff-28c619611c43",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "Faça os ajustes necessários no Prompt do seu agente",
+        "height": 220,
+        "width": 350,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5632,
+        736
+      ],
+      "id": "c38efcc2-8692-4968-a52d-5b98a87bbf2a",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "content": "![Source example](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png)\n",
+        "width": 160,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        48
+      ],
+      "id": "19dcbc66-744f-4eca-9940-d4b156aac525",
+      "name": "Sticky Note27"
+    },
+    {
+      "parameters": {
+        "content": "![Source example](https://raichu-uploads.s3.amazonaws.com/logo_no-code-start-up_gjespp.png#full-width)\n",
+        "width": 160,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        48
+      ],
+      "id": "58be49d5-89e3-4eaf-a2b0-3317f45f8118",
+      "name": "Sticky Note28"
+    },
+    {
+      "parameters": {
+        "content": "![Source example](https://www.z-api.io/wp-content/uploads/2023/10/LOGOTIPO-PRIMARIA-02.png)\n",
+        "height": 100,
+        "width": 220,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        48
+      ],
+      "id": "56f41813-7d77-4d07-b62c-f1540a9a1f27",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "content": "## Instruções de Uso\n🔴 Áreas em vermelho você deve realizar alterações de acordo com seu canal de entrada;\n🟢 Áreas em verde já estão pré configuradas para o canal do Template, caso vá utilizar outro canal, também fazer devidas alterações nesses nodes;\n\n⚠️ Atenção: \n1. Não altere nome de parâmetros pré-existentes para para evitar quebra do fluxo;\n2. Fique a vontade para adicionar novos parâmetros caso necessário;",
+        "height": 220,
+        "width": 690,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        256
+      ],
+      "id": "79253c75-c9f0-4aa0-a804-15a08b2b4270",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "amount": "={{ $('ECU').item.json.espera_buffer }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3168,
+        800
+      ],
+      "id": "2f179303-9295-47ab-86c4-174cdddf3666",
+      "name": "Wait",
+      "webhookId": "05557399-04f1-43c4-bbf1-e47a23bf735e"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "Mensagens",
+        "key": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        800
+      ],
+      "id": "50324bf8-fba1-4e76-9236-d72397340ab7",
+      "name": "Redis Buffer 1",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9203a9ee-85bf-476b-9d80-3a1dba0a5f72",
+              "leftValue": "={{ $('Redis Buffer 1').item.json.Mensagens.last() }}",
+              "rightValue": "={{ $('Redis Buffer 2').item.json.Mensagens.last() }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3616,
+        800
+      ],
+      "id": "8b366551-1523-48c0-8fbc-cc81d6d576bc",
+      "name": "If",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "Mensagens",
+        "key": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        3408,
+        800
+      ],
+      "id": "55caf7f2-5646-4ec8-be76-fe15c74e9a3f",
+      "name": "Redis Buffer 2",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3616,
+        1072
+      ],
+      "id": "8a2253ac-347c-4a50-8428-ee1ccb52983d",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8920dcb4-c6c3-4cdd-9b57-de65bf53653e",
+              "name": "Mensagens",
+              "value": "={{ $json.Mensagens.join(\"\\n\\n\") }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4176,
+        800
+      ],
+      "id": "6449e1b0-b90e-40ea-853a-642dbb46f90e",
+      "name": "Mensagem Bufferizada"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Dados Lead').item.json.IdConversa }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        5888,
+        1136
+      ],
+      "id": "e4ad7426-cc76-4724-906d-1fa07c819771",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "kK5baOa9niCOFAem",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Mensagem Bufferizada').item.json.Mensagens }}",
+        "options": {
+          "systemMessage": "=# Instruções\nVocê é um agente de suporte e vendas da NoCode StartUp, um ecossistema de ensino de tecnologias IA e NoCode, com formações, comunidade e hub de contratações de profissionais, com grande foco na criação de Agentes de Inteligência Artificial.\nAdicione emojis em suas respostas.\n\n# Restrições\n- Adapte o fluxo da conversa conforme as necessidades do usuário, porém evite responder perguntas fora do seu papel, atenha-se a suas <instruções> e função;\n- Nunca invente informações, atenha-se apenas as suas informações fornecidas;\n- Responda apenas com informações que você sabe e tem certeza;\n- Responda o usuário no idioma que ele estiver falando;\n- Nunca envie links coletados da base vetorial;\n\n# Variáveis\nData atual: {{ $now }}\n\n  <ErroFormatoMensagem>\nO usuário enviou um formato de mensagem que não podemos processar.\nCaseo seja a única mensagem enviada, diga ao usuário que não entende esse tipo de mensagem.\n\n  <ContextoImagem>\nDados entre os parâmetros <ContextoImagem></ContextoImagem> são imagens enviadas pelo usuário que foram pré processadas e detalhadas por uma IA  para que você as entenda.\n\n  <ContextoPDF>\nDados entre os parâmetros <ContextoPDF></ContextoPDF> são arquivos PDF enviados pelo usuário que foram pré processadas e transcritos por uma IA  para que você as entenda.\n\n\n\n# Contexto Extra"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        5696,
+        800
+      ],
+      "id": "de31af13-566d-4df0-ae70-488930259102",
+      "name": "AI Agent2",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Filtro Inicial').item.json.body.text.message }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "4855b940-fae3-46f7-b3cc-7bf86d26f48c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "897e2cb9-4ec5-4e93-9021-44d144f4a116",
+                    "leftValue": "={{ $('Webhook').item.json.body.audio.audioUrl }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2fa9ce87-a693-4807-87b5-f75ed587718e",
+                    "leftValue": "={{ $('Webhook').item.json.body.image.imageUrl }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagem"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "27d11553-a746-47e8-aa56-713b92a68a8f",
+                    "leftValue": "={{ $('Webhook').item.json.body.document.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Outro"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        752
+      ],
+      "id": "3b21685d-82a2-478f-820f-77157a72a16d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "messageData": "={{ $json.Erro }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        1200
+      ],
+      "id": "2c738f10-0549-448a-802a-dae34d9ac016",
+      "name": "Redis Push to DB - Erro",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "66a91f66-e755-4120-b22f-44c814f56162",
+              "name": "Mensagem",
+              "value": "={{ $('Webhook').item.json.body.text.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1648,
+        416
+      ],
+      "id": "21f30b0e-31cc-4c1d-a08d-51f62745a01c",
+      "name": "Texto",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "messageData": "={{ $json.Mensagem }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        416
+      ],
+      "id": "a6367033-3e6a-430f-8804-d449b775c3c5",
+      "name": "Redis Push to DB - Texto",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9f643f79-3a37-409a-9676-6da70d1f511d",
+              "name": "Erro",
+              "value": "<ErroFormatoMensagem>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1648,
+        1200
+      ],
+      "id": "50c1daba-6871-49d3-b4ca-9f4f2ce69b60",
+      "name": "Erro"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.z-api.io/instances/3F0AA0550A12E2EECAF9FA896D83A905/token/DF9A6E5B512E90C4924F741A/send-text",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $('Dados Lead').item.json.IdConversa }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        6192,
+        816
+      ],
+      "id": "b16a15ee-4fd8-49fa-b189-6442691d76e2",
+      "name": "Z-API",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CtRR87MnBqCsW6mx",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9101ecea-42ec-48ef-956b-39bcc931a546",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -96,
+        800
+      ],
+      "id": "1c7445ba-1a07-4147-ac3c-947f937ed2b2",
+      "name": "Webhook",
+      "webhookId": "9101ecea-42ec-48ef-956b-39bcc931a546"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "=#Instruções\nO usuário te enviou uma imagem a qual você deve descrever.\n\nA imagem pode vir acompanhada de uma mensagem de texto (<MensagemUsuario>)\n\nCaso venha, utilize a mensagem anexa como contexto extra, tente capturar o sentimento da mensagem e objetivo pelo qual o usuário esteja enviando esta imagem na conversa.\n\nCrie uma resposta descrevendo as informações enviadas para que estas sejam utilizadas por um agente no futuro.\n\nLembre-se:\nEste agente apenas terá as informações que você fornecer, portanto repasse toda informação que julgar importante.\n\n#Dados\n<MensagemUsuario>\n{{ $json.imagem_caption }}\n</MensagemUsuario>",
+        "imageUrls": "={{ $json.Imagem }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        2064,
+        800
+      ],
+      "id": "b03f92de-f3c5-4ef6-b255-06236cb68675",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "jsBMGlGDKDgZkivj",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4897b0ec-7847-4462-b257-c6105c0d4bc4",
+              "name": "Imagem",
+              "value": "={{ $('Webhook').item.json.body.image.imageUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "e960ff07-52e8-4cd6-9239-3dfc164f854e",
+              "name": "imagem_caption",
+              "value": "={{ $('Webhook').item.json.body.image.caption }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1648,
+        800
+      ],
+      "id": "fc6c3063-3805-4d85-bfd7-07dc84afefae",
+      "name": "Imagem"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "messageData": "=<ContextoImagem>\n\n  <DetalheImagem>\n{{ $json.texto }}\n  </DetalheImagem>\n\nContexto Extra: O usuário encaminhou a mensagem a seguir junto á imagem.\n  <MensagemUsuario>\n{{ $('Imagem').item.json.imagem_caption }}\n  </MensagemUsuario>\n\n</ContextoImagem>\n",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        800
+      ],
+      "id": "25d93a89-9002-4dda-96a3-e6a04a0d050c",
+      "name": "Redis Push to DB - imagem",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "adb8f9e7-426f-40e7-80e2-a8802d0a2ac2",
+              "name": "audio",
+              "value": "={{ $('Webhook').item.json.body.audio.audioUrl }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1648,
+        608
+      ],
+      "id": "7358c1b3-28f7-4750-875b-f30f272ed685",
+      "name": "audio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79ece374-b8de-4d37-beec-25f681e043a8",
+              "name": "pdf",
+              "value": "={{ $('Webhook').item.json.body.document.documentUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "344e9ad9-23c6-43d4-bfda-99cfe1a2a988",
+              "name": "pdf_caption",
+              "value": "={{ $('Webhook').item.json.body.document.caption }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1648,
+        1008
+      ],
+      "id": "4f668517-e795-488b-8479-8e0051b42d6c",
+      "name": "PDF"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('Dados Lead').item.json.IdConversa }}_buffer"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        3824,
+        800
+      ],
+      "id": "894ff063-7f09-4629-ad23-dc2e5ebaaf23",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7508aa4f-e864-432c-8f1e-4c6a4d186358",
+              "name": "texto",
+              "value": "={{ $json['0'].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2272,
+        800
+      ],
+      "id": "8912697b-9aea-4d87-84eb-a7da302e8cf0",
+      "name": "bolean to text"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        2064,
+        1008
+      ],
+      "id": "04093e3e-d074-4c1b-b000-7863a81fcc64",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "messageData": "=<ContextoPDF>\n  <TranscricaoPDF>\n{{ $json.text }}\n  </TranscricaoPDF>\n\nContexto Extra: O usuário encaminhou a mensagem a seguir junto ao PDF.\n  <MensagemUsuario>\n{{ $('PDF').item.json.pdf_caption }}\n  </MensagemUsuario>\n</ContextoPDF>\n",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        1008
+      ],
+      "id": "cb9de500-fbb7-43e1-bee8-cab126b111eb",
+      "name": "Redis Push to DB - PDF",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d73f44db-857a-4243-9a17-e1f93ddb7e2e",
+              "name": "espera_buffer",
+              "value": 3,
+              "type": "number"
+            },
+            {
+              "id": "7d22ce4d-3a73-431d-b062-a2c2d4890529",
+              "name": "temperatura_modelo",
+              "value": 0.4,
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        800
+      ],
+      "id": "8240f0b3-a332-489e-a857-63dc2285d361",
+      "name": "ECU"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "d82c5c4d-abf4-44ec-8d6c-56659f8d7576",
+              "leftValue": "={{ $('Webhook').item.json.body.isEdit }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "a2e9441b-e0a7-4a20-984c-077aadf86a65",
+              "leftValue": "={{ $('Webhook').item.json.body.isGroup }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "231f7a95-7903-4bb1-b94c-c0ba82b6a805",
+              "leftValue": "={{ $('Webhook').item.json.body.isNewsletter }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "09edccf6-8694-4d70-805e-846dac1cd344",
+              "leftValue": "={{ $('Webhook').item.json.body.fromApi }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3be73f32-a074-4fde-89fc-c6ebcb272d0f",
+      "name": "Filtro Inicial",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.1,
+      "position": [
+        576,
+        800
+      ],
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.audio }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1856,
+        608
+      ],
+      "id": "8d9e47e8-8e78-470c-93a6-991c73e14f3c",
+      "name": "HTTP - Audio"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.pdf }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1856,
+        1008
+      ],
+      "id": "9a652a79-ffc0-49a1-991c-a9840bf3d98c",
+      "name": "HTTP Request - pdf"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "pt"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        2064,
+        608
+      ],
+      "id": "e399280a-07ae-497b-9805-a73ed3b3f1e8",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "jsBMGlGDKDgZkivj",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Dados Lead').item.json.IdConversa }}_buffer",
+        "messageData": "={{ $json.text }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        608
+      ],
+      "id": "4321b022-1c46-446d-ac62-271a6cb4b348",
+      "name": "Redis Push to DB - Audio",
+      "credentials": {
+        "redis": {
+          "id": "y8g3ScdoKnhJkprZ",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Filtros de tipos de Mensagens",
+        "height": 1072,
+        "width": 1616,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "e16fa7f6-74e6-47f1-a4c8-a5138cdc9ba2",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Buffer de mensagens com redis e temporizador",
+        "height": 656,
+        "width": 1136,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2880,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "b5889eb9-bf0b-467d-b050-1633a08997a7",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Central de Controle\n\ncontrole refinado de parametros/variaveis configuraveis",
+        "height": 544,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        192,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "598f6db4-8a3a-4ea9-bf15-59169e4b1c68",
+      "name": "Sticky Note8"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-n8n.2oop59.easypanel.host",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:111.0) Gecko/20100101 Firefox/111.0",
+            "content-length": "988",
+            "accept-encoding": "gzip",
+            "content-type": "application/json; charset=utf-8",
+            "origin": "https://api.z-api.io",
+            "server": "Z-API",
+            "x-forwarded-for": "152.67.40.241",
+            "x-forwarded-host": "n8n-n8n.2oop59.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "6a05437ff89f",
+            "x-real-ip": "152.67.40.241",
+            "z-api-token": "DF9A6E5B512E90C4924F741A"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "isStatusReply": false,
+            "chatLid": "109757956415611@lid",
+            "connectedPhone": "5519984177781",
+            "waitingMessage": false,
+            "isEdit": false,
+            "isGroup": false,
+            "isNewsletter": false,
+            "instanceId": "3F0AA0550A12E2EECAF9FA896D83A905",
+            "messageId": "3EB0293934D8C2C5A91FFB",
+            "phone": "5519984177781",
+            "fromMe": true,
+            "momment": 1775148581000,
+            "status": "RECEIVED",
+            "chatName": "5519984177781",
+            "senderPhoto": null,
+            "senderName": "André Bueno",
+            "photo": "https://pps.whatsapp.net/v/t61.24694-24/56341701_306596800009742_8296095233372848128_n.jpg?ccb=11-4&oh=01_Q5Aa4AFQctnHYQ_j96l3YFg7DERvjV8pdD3ftPzWnh7Fq5wH5A&oe=69DBA210&_nc_sid=5e03e0&_nc_cat=111",
+            "broadcast": false,
+            "participantLid": null,
+            "messageExpirationSeconds": 0,
+            "forwarded": false,
+            "type": "ReceivedCallback",
+            "fromApi": false,
+            "audio": {
+              "ptt": false,
+              "seconds": 16,
+              "audioUrl": "https://f004.backblazeb2.com/file/temp-file-download/instances/3F0AA0550A12E2EECAF9FA896D83A905/3EB0293934D8C2C5A91FFB/BNYKVZTJwI-ynNCmkT1I8w==.ogg",
+              "mimeType": "audio/ogg; codecs=opus",
+              "viewOnce": false
+            }
+          },
+          "webhookUrl": "https://n8n-n8n.2oop59.easypanel.host/webhook-test/9101ecea-42ec-48ef-956b-39bcc931a546",
+          "executionMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encontrar Cliente1": {
+      "main": [
+        [
+          {
+            "node": "Cliente Existe?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cliente Existe?1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Criar Cliente1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar Cliente1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados Lead": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Redis Buffer 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Buffer 1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Buffer 2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem Bufferizada": {
+      "main": [
+        [
+          {
+            "node": "Encontrar Cliente1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Z-API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Imagem",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Push to DB - Erro": {
+      "main": [
+        [
+          {
+            "node": "Redis Buffer 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "Redis Push to DB - Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Push to DB - Texto": {
+      "main": [
+        [
+          {
+            "node": "Redis Buffer 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erro": {
+      "main": [
+        [
+          {
+            "node": "Redis Push to DB - Erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Z-API": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "ECU",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Imagem": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "bolean to text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Push to DB - imagem": {
+      "main": [
+        [
+          {
+            "node": "Redis Buffer 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis": {
+      "main": [
+        [
+          {
+            "node": "Mensagem Bufferizada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bolean to text": {
+      "main": [
+        [
+          {
+            "node": "Redis Push to DB - imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Redis Push to DB - PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Push to DB - PDF": {
+      "main": [
+        [
+          {
+            "node": "Redis Buffer 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ECU": {
+      "main": [
+        [
+          {
+            "node": "Filtro Inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtro Inicial": {
+      "main": [
+        [
+          {
+            "node": "Dados Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "audio": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - pdf": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Redis Push to DB - Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Push to DB - Audio": {
+      "main": [
+        [
+          {
+            "node": "Redis Buffer 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "89b1652d-7c2a-47de-8731-4d4fc146b9ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "180c92c3e0035fe213886208b2ae2a5c56d1e5c4e354405e7bf6cc5dc6dc53ff"
+  },
+  "id": "iKmL0jMoB17A6cFd",
+  "tags": [
+    {
+      "name": "NoCode StartUp",
+      "id": "gzHUNQeXOeHEp98d",
+      "updatedAt": "2026-04-02T16:10:33.605Z",
+      "createdAt": "2026-04-02T16:10:33.605Z"
+    }
+  ]
+}
