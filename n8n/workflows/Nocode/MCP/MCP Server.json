@@ -8,91 +8,40 @@
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 2,
       "position": [
-        0,
-        0
+        464,
+        -32
       ],
-      "id": "f3056b99-a469-4d69-8c8c-f2e9e478a316",
+      "id": "c8197698-32b2-48aa-ab65-ed41dc543745",
       "name": "MCP Server Trigger",
       "webhookId": "6ac8056d-5e25-4ac9-b043-28f791ae1412"
     },
     {
       "parameters": {
-        "operation": "get",
         "calendar": {
           "__rl": true,
-          "value": "andrebcs89@gmail.com",
+          "value": "9766e094aa9c387bfac59281007649f69778098b891103fd4a3c0bd85dd6d843@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "andrebcs89@gmail.com"
+          "cachedResultName": "n8n"
         },
-        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `id do evento`, 'string') }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleCalendarTool",
-      "typeVersion": 1.3,
-      "position": [
-        -208,
-        208
-      ],
-      "id": "1de20488-d23c-4980-adb4-6242d257c2d6",
-      "name": "Get Events",
-      "credentials": {
-        "googleCalendarOAuth2Api": {
-          "id": "BRREEUGkZ568tu3u",
-          "name": "Google Calendar account"
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Data e hora de início no formato ISO 8601 com timezone Brasil (GMT-3).\nEx: 2026-04-22T11:00:00-03:00`, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `Data e hora de início no formato ISO 8601 com timezone Brasil (GMT-3).\nEx: 2026-04-22T11:00:00-03:00`, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `Descrição adicional do evento.\nIncluir detalhes relevantes informados pelo usuário.`, 'string') }}",
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', `Local do evento.\nSe o usuário mencionar endereço, incluir aqui.\nSe não houver, deixar vazio.`, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Título do evento (OBRIGATÓRIO).\nNunca pode estar vazio.\nSe o usuário não informar, gerar um título baseado no contexto (ex: \"Reunião\", \"Consulta médica\").`, 'string') }}"
         }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "getAll",
-        "calendar": {
-          "__rl": true,
-          "value": "andrebcs89@gmail.com",
-          "mode": "list",
-          "cachedResultName": "andrebcs89@gmail.com"
-        },
-        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
-        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
-        "options": {}
       },
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -80,
-        208
+        560,
+        176
       ],
-      "id": "c9d7052c-8536-4fb0-b1c8-8adc6a8d6ec0",
-      "name": "Get all Events",
+      "id": "5b3d6c3e-e5d1-44ef-936d-0c31b54fa0d3",
+      "name": "create_event",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "BRREEUGkZ568tu3u",
-          "name": "Google Calendar account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "calendar": {
-          "__rl": true,
-          "value": "andrebcs89@gmail.com",
-          "mode": "list",
-          "cachedResultName": "andrebcs89@gmail.com"
-        },
-        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
-        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.googleCalendarTool",
-      "typeVersion": 1.3,
-      "position": [
-        96,
-        208
-      ],
-      "id": "16ea9e7b-bb0c-4d76-84cf-9e38095f1c25",
-      "name": "Create an event in Google Calendar",
-      "credentials": {
-        "googleCalendarOAuth2Api": {
-          "id": "BRREEUGkZ568tu3u",
+          "id": "mlPtdkFIRnTCPasa",
           "name": "Google Calendar account"
         }
       }
@@ -102,23 +51,85 @@
         "operation": "delete",
         "calendar": {
           "__rl": true,
-          "value": "andrebcs89@gmail.com",
+          "value": "9766e094aa9c387bfac59281007649f69778098b891103fd4a3c0bd85dd6d843@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "andrebcs89@gmail.com"
+          "cachedResultName": "n8n"
         },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `ID único do evento no Google Agenda (OBRIGATÓRIO).\n\nREGRAS:\n- Deve ser exatamente o ID retornado pela ferramenta \"Get all Events\".\n- Nunca inventar ou modificar o ID.\n- Nunca usar título ou data como substituto.\n- Se não tiver o ID, deve pedir ao usuário antes de continuar.`, 'string') }}",
         "options": {}
       },
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        304,
-        192
+        768,
+        160
       ],
-      "id": "100f5cdd-b4f1-4ce5-b742-fffae6305522",
-      "name": "Delete an event in Google Calendar",
+      "id": "a1fcd4ad-43c2-4c9d-8cbd-701c47249026",
+      "name": "delete_event_by_id_ONLY",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "BRREEUGkZ568tu3u",
+          "id": "mlPtdkFIRnTCPasa",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "9766e094aa9c387bfac59281007649f69778098b891103fd4a3c0bd85dd6d843@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `id do evento`, 'string') }}",
+        "options": {
+          "timeZone": {
+            "__rl": true,
+            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Timezone', `Usar o horário de brasilia`, 'string') }}",
+            "mode": "id"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        256,
+        176
+      ],
+      "id": "53990ffc-03c2-4e0b-ac9d-db0bc84fe27a",
+      "name": "get_event_by_id",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mlPtdkFIRnTCPasa",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "9766e094aa9c387bfac59281007649f69778098b891103fd4a3c0bd85dd6d843@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        176
+      ],
+      "id": "90f76451-8aa1-4b9c-8b97-f2a37000cb63",
+      "name": "list_events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mlPtdkFIRnTCPasa",
           "name": "Google Calendar account"
         }
       }
@@ -126,7 +137,7 @@
   ],
   "pinData": {},
   "connections": {
-    "Get Events": {
+    "create_event": {
       "ai_tool": [
         [
           {
@@ -137,7 +148,7 @@
         ]
       ]
     },
-    "Get all Events": {
+    "delete_event_by_id_ONLY": {
       "ai_tool": [
         [
           {
@@ -148,7 +159,7 @@
         ]
       ]
     },
-    "Create an event in Google Calendar": {
+    "get_event_by_id": {
       "ai_tool": [
         [
           {
@@ -159,7 +170,7 @@
         ]
       ]
     },
-    "Delete an event in Google Calendar": {
+    "list_events": {
       "ai_tool": [
         [
           {
@@ -171,16 +182,16 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "4f952c09-fc42-4925-b0b5-bbc36dab3a1f",
+  "versionId": "e34c1ee8-34f4-4966-b87a-5c19b271f68b",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "07b45f0cd4a3ca1b00368fd3a0bf3f9b89a533c5a00f0c13cc0d5b48cc7c78e2"
+    "instanceId": "49d16ffacc0e66154784fe42a2aa5441422ff8cad83ac43eda856546486f9a31"
   },
-  "id": "MbJQJ6EEFM9vkbkE",
+  "id": "1x6IFBJBZi6ANUMI",
   "tags": []
 }
