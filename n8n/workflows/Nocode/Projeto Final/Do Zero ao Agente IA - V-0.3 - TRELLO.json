@@ -1,0 +1,823 @@
+{
+  "name": "Do Zero ao Agente IA - V-0.3 - TRELLO",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        144,
+        -384
+      ],
+      "id": "413a5a02-ed17-441f-b07b-650560ecc8d8",
+      "name": "When chat message received",
+      "webhookId": "b98b634c-0dae-4252-ae61-d4781febad58"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# 🤖 Agente Vendedor – Dudu (NoCode Startup)\n\nVocê é **Dudu**, o agente vendedor da **NoCode Startup**.  \nSua missão é **atender leads interessados nas formações**, qualificá-los, apresentar os produtos e conduzir até a criação do pedido e geração da cobrança no Asaas.  \n\nDudu deve ser **simpático e atencioso**, perguntando sempre **uma coisa por vez**, de forma clara e natural.  \nO processo de follow-up e de verificação de pagamento será feito por outros workflows — **não é responsabilidade de Dudu**.  \n\n---\n\n## 🎯 Regras Gerais\n\n- Sempre **atualizar a última mensagem recebida** do lead no Supabase usando `atualizar_lead`.  \n- Sempre que precisar consultar dados, usar as **tools disponíveis** (nunca inventar informações).  \n- Confirmar informações críticas (como CPF/CNPJ, e-mail, forma de pagamento) antes de seguir.  \n- Caso o lead não esteja cadastrado em alguma das plataformas (Supabase, Trello, Asaas), criar o registro necessário.  \n- Nunca oferecer tudo de uma vez. **Pergunte em etapas curtas**.  \n\n---\n\n## 📋 Etapas do Atendimento\n\n### 1. Abertura e Qualificação\n- Cumprimente de forma simpática e acolhedora.  \n- Pergunte primeiro o **CPF ou CNPJ** → essa é a **chave de verificação**.  \n- Buscar o lead no Supabase com `buscar_leads`.  \n- Se existir → prossiga direto para a qualificação.  \n- Se não existir → peça os dados para cadastro:  \n  - Nome completo  \n  - Telefone com DDD  \n  - E-mail  \n\n👉 Criar o lead no Supabase com `criar_lead`.  \n👉 Criar cartão no Trello com `criar_cartao`.  \n\n---\n\n### 2. Qualificação da Demanda\n- Depois de confirmar o cadastro, pergunte:  \n  1. \"Você já tem experiência com NoCode ou está começando agora?\"  \n  2. \"Qual sua maior demanda hoje: automações, criação de apps, banco de dados ou tudo junto?\"  \n\nEssas respostas ajudam a recomendar o produto mais adequado.  \n\n---\n\n### 3. Apresentação dos Produtos\n- Buscar os produtos disponíveis no Supabase com `buscar_produtos`.  \n- Apresentar sempre começando pela **Assinatura PRO** (R$ 1.997,00), mas sem dizer que está priorizando.  \n- Caso o lead não queira a PRO, apresentar as formações individuais (todas R$ 997,00):  \n  - Formação n8n  \n  - Formação Supabase  \n  - Formação Lovable  \n\n---\n\n### 4. Pedido e Pagamento\n- Ao confirmar interesse, criar o **pedido no Supabase** (`criar_pedido`) com status **aguardando_pagamento**.  \n- Perguntar de forma clara:  \n  > \"Qual forma de pagamento você prefere: Pix, Boleto ou Cartão de Crédito?\"  \n\nFluxo técnico:\n1. Buscar os dados atualizados do lead no Supabase com `buscar_leads`.  \n2. Verificar se o cliente existe no Asaas:  \n   - Usar `asaas_buscar_cliente` com o CPF/CNPJ.  \n   - Se existir → seguir direto para gerar cobrança.  \n   - Se não existir → criar cliente no Asaas com `asaas_criar_cliente`.  \n3. Criar cobrança no Asaas com `asaas_criar_cobranca`, usando a forma de pagamento escolhida.  \n4. Atualizar o pedido no Supabase com `atualizar_pedido`, incluindo o link de pagamento.  \n5. Atualizar o cartão no Trello para **Aguardando Pagamento** com `trello_update_aguardando_pagamento`.  \n\n---\n\n### 5. Encerramento\n- Dudu deve sempre finalizar confirmando que:  \n  - O pedido foi criado,  \n  - O link de pagamento foi enviado,  \n  - E está disponível para dúvidas.  \n\nExemplo de encerramento:  \n> \"Pronto, seu pedido já foi criado ✅. Aqui está o link de pagamento: [link].  \n> Assim que o pagamento for confirmado, você terá acesso à formação escolhida.  \n> Posso te ajudar em mais alguma coisa?\"  \n\n---\n\n## 🔧 Tools disponíveis\n\n- **Supabase**  \n  - `buscar_leads`  \n  - `criar_lead`  \n  - `atualizar_lead`  \n  - `buscar_produtos`  \n  - `criar_pedido`  \n  - `atualizar_pedido`  \n\n- **Trello**  \n  - `criar_cartao`  \n  - `trello_update_aguardando_pagamento`  \n  - `trello_update_perdido`  \n\n- **Asaas**  \n  - `asaas_buscar_cliente`  \n  - `asaas_criar_cliente`  \n  - `asaas_criar_cobranca`  "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        352,
+        -384
+      ],
+      "id": "ebe68b8c-0689-40ab-904a-894994e43e36",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        -784
+      ],
+      "id": "dffb1d9d-cb26-4faa-80ec-e5dffc7bad07",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "U0s8LIUJ0ZMxZfBc",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        -560
+      ],
+      "id": "7ac44b36-6240-43da-92b4-76308bc0095d",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "FjZp4AVma2ZTgkRx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## SUPABASE\n",
+        "height": 256,
+        "width": 1296
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        624,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "a7eccbd0-d0a9-47de-8f55-682e2d3bdaa4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Busca informações dos Leads no Supabase",
+        "operation": "getAll",
+        "tableId": "Leads",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -112
+      ],
+      "id": "07a09f9c-46bd-4b93-8f3f-9519d67e7b80",
+      "name": "buscar_leads",
+      "credentials": {
+        "supabaseApi": {
+          "id": "c3A343ZpwmkpwvDn",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Criar um novo Lead no Supabase",
+        "tableId": "Leads",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nome",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', `Nome do Lead`, 'string') }}"
+            },
+            {
+              "fieldId": "telefone",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', `Telefone do Lead`, 'string') }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', `Email do Lead`, 'string') }}"
+            },
+            {
+              "fieldId": "ultima_msg",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "cpfCnpj",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', `CPF do lead`, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        784,
+        -112
+      ],
+      "id": "ccbe1f53-5ffc-4a4c-88af-70a89b149ecc",
+      "name": "criar_lead",
+      "credentials": {
+        "supabaseApi": {
+          "id": "c3A343ZpwmkpwvDn",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Atualiza o horário da última mensagem de um Lead no Supabase",
+        "operation": "update",
+        "tableId": "Leads",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cpf_cnpj",
+              "condition": "eq",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Field_Value', `CPF ou CNPJ do Lead`, 'string') }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "ultima_msg",
+              "fieldValue": "={{ $now }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -112
+      ],
+      "id": "6b829e95-46ac-41f4-9076-925d9fd73395",
+      "name": "atualizar_lead",
+      "credentials": {
+        "supabaseApi": {
+          "id": "c3A343ZpwmkpwvDn",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Busca os produtos no Supabase",
+        "operation": "getAll",
+        "tableId": "Produtos",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        -112
+      ],
+      "id": "b62eb878-5b06-4ddd-b95a-d4dbad6d49ed",
+      "name": "buscar_produtos",
+      "credentials": {
+        "supabaseApi": {
+          "id": "c3A343ZpwmkpwvDn",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Busca informações dos pedidos no Supabase",
+        "operation": "getAll",
+        "tableId": "Pedidos",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        -112
+      ],
+      "id": "25a0bf61-7cbf-41ad-ac69-17eed7a0c0dd",
+      "name": "buscar_pedidos",
+      "credentials": {
+        "supabaseApi": {
+          "id": "c3A343ZpwmkpwvDn",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Cria um novo pedido no Supabase",
+        "tableId": "Pedidos",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "lead_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', `id do lead na tabela Leads do Supabase`, 'string') }}"
+            },
+            {
+              "fieldId": "produto_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', `id do produto na tabela Produtos do Supabase`, 'string') }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', `Status do pedido: aguardando_pagamento, pago, cancelado`, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        -112
+      ],
+      "id": "675fc624-95fd-4ea0-b8ca-79895fff0df6",
+      "name": "criar_pedido",
+      "credentials": {
+        "supabaseApi": {
+          "id": "c3A343ZpwmkpwvDn",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Atualiza um pedido no Supabase",
+        "operation": "update",
+        "tableId": "Pedidos",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Field_Value', `Id do pedido`, 'string') }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', `Status do pedido: aguardando_pagamento, pago, cancelado`, 'string') }}"
+            },
+            {
+              "fieldId": "asaas_link_pagamento",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', `URL de pagamento do Asaas`, 'string') }}"
+            },
+            {
+              "fieldId": "asaas_payment_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', `Id do cliente no Asaas`, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        -112
+      ],
+      "id": "cc8be2a6-1cb1-48c4-912c-bf2688b789e7",
+      "name": "atualizar_pedido",
+      "credentials": {
+        "supabaseApi": {
+          "id": "c3A343ZpwmkpwvDn",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "##  ASAAS\n",
+        "height": 288,
+        "width": 784
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "84e768ea-18a0-4ec6-b64f-0cb82348d573",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "##  TRELLO",
+        "height": 288,
+        "width": 704
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "2a2a3528-3f92-4b63-ba10-b2d042864cec",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Buscar todos os clientes do Asaas",
+        "url": "https://api-sandbox.asaas.com/v3/customers",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        1312,
+        224
+      ],
+      "id": "d4deb28d-67b1-4e3b-ba01-33fca518f7e7",
+      "name": "asaas_buscar_cliente",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "rFATEOUKl8LQZ7mF",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Criar Cliente no asaas\nUse apenas as mesmas informações da tabela Leads do Supabase\nUse buscar_leads para conferencia.",
+        "method": "POST",
+        "url": "https://api-sandbox.asaas.com/v3/customers",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "cpfCnpj",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `cpf ou cnpj do lead. apenas numeros`, 'string') }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', `nome do lead`, 'string') }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters2_Value', `email do lead`, 'string') }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters3_Value', `telefone do lead`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        1520,
+        224
+      ],
+      "id": "ee55d2af-8e97-4dbb-b09b-ad44b2bbfe9e",
+      "name": "asaas_criar_cliente",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "rFATEOUKl8LQZ7mF",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Cria uma cobrança no Asaas.",
+        "method": "POST",
+        "url": "https://api-sandbox.asaas.com/v3/payments",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "billingType",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `Define o tipo de cobrança que será gerada.\nValores possíveis: BOLETO, CREDIT_CARD, PIX.`, 'string') }}"
+            },
+            {
+              "name": "customer",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', `ID único do cliente no Asaas, retornado ao criar o cliente previamente.`, 'string') }}"
+            },
+            {
+              "name": "value",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters2_Value', `Valor da cobrança em reais (ponto como separador decimal).`, 'string') }}"
+            },
+            {
+              "name": "dueDate",
+              "value": "={{ $now.plus({ days: 1 }).format(\"yyyy-MM-dd\") }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters4_Value', `Texto descritivo que identifica a cobrança. Pode ser o nome do plano, serviço ou produto.`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        1728,
+        224
+      ],
+      "id": "c2db795f-96f0-4cfc-ae19-cfb1e4b0faee",
+      "name": "asaas_criar_cobrança",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "rFATEOUKl8LQZ7mF",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Use esta tool para criar um cartão no Trello e registrar o ID desse cartão no Supabase",
+        "workflowId": {
+          "__rl": true,
+          "value": "TPIjvIkuOz5Wqijq",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/TPIjvIkuOz5Wqijq",
+          "cachedResultName": "Do Zero ao Agente IA - Criar cartão Trello"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nome', `Nome do Lead`, 'string') }}",
+            "Telefone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telefone', `Telefone do Lead`, 'string') }}",
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', `Email do Lead`, 'string') }}",
+            "cpfCnpj": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cpfCnpj', `CPF ou CNPJ do lead. Apenas números.`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "cpfCnpj",
+              "displayName": "cpfCnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        224
+      ],
+      "id": "89446e78-b3f6-458e-bf62-9db0fd733699",
+      "name": "criar_cartao"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Move/atualiza o cartão do lead para a lista 'Aguardando Pagamento'.",
+        "operation": "update",
+        "id": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Card', `trello_id do lead`, 'string') }}",
+          "mode": "id"
+        },
+        "updateFields": {
+          "idList": "69eb7384ac0b1eb7e2f2e1ad"
+        }
+      },
+      "type": "n8n-nodes-base.trelloTool",
+      "typeVersion": 1,
+      "position": [
+        672,
+        224
+      ],
+      "id": "aaee0daa-f9f6-47c0-9fc0-ac8b3771d8ed",
+      "name": "trello_update_aguardando_pagamento",
+      "credentials": {
+        "trelloApi": {
+          "id": "cO32raAImrZySdoW",
+          "name": "Trello account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Move/atualiza o cartão do lead para a lista 'Perdido'.",
+        "operation": "update",
+        "id": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Card', `trello_id do lead`, 'string') }}",
+          "mode": "id"
+        },
+        "updateFields": {
+          "idList": "69eb760ae818d76a2a110b8d"
+        }
+      },
+      "type": "n8n-nodes-base.trelloTool",
+      "typeVersion": 1,
+      "position": [
+        896,
+        224
+      ],
+      "id": "58f6a227-c0a8-4c09-93af-4397bc3f54bf",
+      "name": "trello_update_pagamento_perdido",
+      "credentials": {
+        "trelloApi": {
+          "id": "cO32raAImrZySdoW",
+          "name": "Trello account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_leads": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar_lead": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "atualizar_lead": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_produtos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_pedidos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar_pedido": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "atualizar_pedido": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "asaas_buscar_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "asaas_criar_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "asaas_criar_cobrança": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar_cartao": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "trello_update_aguardando_pagamento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "trello_update_pagamento_perdido": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "13a4848a-e028-4b17-ad28-13986e89a6a4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2fcc36654c1e8f620e51e39aa8b11ba3f15de46404f10ff44c6c84964223ae6f"
+  },
+  "id": "0bgMUVRgDxthprmU",
+  "tags": []
+}

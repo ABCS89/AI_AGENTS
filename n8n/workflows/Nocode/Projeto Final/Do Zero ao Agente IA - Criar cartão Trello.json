@@ -20,13 +20,13 @@
           ]
         }
       },
-      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "id": "48ca1b04-fa15-49d5-a822-e3f683a5a141",
       "typeVersion": 1.1,
       "name": "When Executed by Another Workflow",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        272,
-        352
+        0,
+        0
       ]
     },
     {
@@ -39,14 +39,14 @@
       "type": "n8n-nodes-base.trello",
       "typeVersion": 1,
       "position": [
-        480,
-        352
+        208,
+        0
       ],
-      "id": "81b96190-7714-47a3-94de-32b59412444d",
+      "id": "7da43152-6bf5-4bd7-bfcd-c3d2f6bf4059",
       "name": "Create a card",
       "credentials": {
         "trelloApi": {
-          "id": "OL2SyCRA6Zfqs4tU",
+          "id": "cO32raAImrZySdoW",
           "name": "Trello account"
         }
       }
@@ -76,14 +76,14 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        688,
-        352
+        416,
+        0
       ],
-      "id": "edfff222-f257-405f-8e91-16112b6de932",
+      "id": "b6efcb3e-b566-4c26-9e96-29ac8cdb6d2e",
       "name": "Update a row",
       "credentials": {
         "supabaseApi": {
-          "id": "PMN8rvUpo51wkTns",
+          "id": "c3A343ZpwmkpwvDn",
           "name": "Supabase account"
         }
       }
@@ -93,10 +93,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        896,
-        352
+        624,
+        0
       ],
-      "id": "56de0744-8bb2-447f-b933-f5a0705a9c37",
+      "id": "40ce0882-783c-4247-b02f-6df933168d3e",
       "name": "No Operation, do nothing"
     }
   ],
@@ -139,14 +139,13 @@
   "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "binaryMode": "separate"
   },
-  "versionId": "63bf770d-61db-4f24-b162-d8a927bcd54f",
+  "versionId": "6dfaebbf-e4b8-4025-8f98-c6f772b4a3f2",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "d1533045c1ecfb999128985f37ab86cdbcb56158ad55f25bff046ee7113d8ecb"
+    "instanceId": "2fcc36654c1e8f620e51e39aa8b11ba3f15de46404f10ff44c6c84964223ae6f"
   },
-  "id": "C4ho4hYF9V3gzjV6",
+  "id": "TPIjvIkuOz5Wqijq",
   "tags": []
 }
