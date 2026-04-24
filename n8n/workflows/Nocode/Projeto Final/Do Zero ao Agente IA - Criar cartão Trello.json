@@ -1,0 +1,152 @@
+{
+  "name": "Do Zero ao Agente IA - Criar cartão Trello",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Nome"
+            },
+            {
+              "name": "Telefone"
+            },
+            {
+              "name": "Email"
+            },
+            {
+              "name": "cpfCnpj"
+            }
+          ]
+        }
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        272,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "listId": "69eb7384ac0b1eb7e2f2e1ac",
+        "name": "={{ $('When Executed by Another Workflow').item.json.Nome }}",
+        "description": "=Telefone: {{ $('When Executed by Another Workflow').item.json.Telefone }}\nEmail: {{ $('When Executed by Another Workflow').item.json.Email }}\nCPF/CNPJ: {{ $('When Executed by Another Workflow').item.json.cpfCnpj }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.trello",
+      "typeVersion": 1,
+      "position": [
+        480,
+        352
+      ],
+      "id": "81b96190-7714-47a3-94de-32b59412444d",
+      "name": "Create a card",
+      "credentials": {
+        "trelloApi": {
+          "id": "OL2SyCRA6Zfqs4tU",
+          "name": "Trello account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Leads",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cpfCnpj",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.cpfCnpj }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "trello_id",
+              "fieldValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        688,
+        352
+      ],
+      "id": "edfff222-f257-405f-8e91-16112b6de932",
+      "name": "Update a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "PMN8rvUpo51wkTns",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        896,
+        352
+      ],
+      "id": "56de0744-8bb2-447f-b933-f5a0705a9c37",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Create a card",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a card": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "63bf770d-61db-4f24-b162-d8a927bcd54f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d1533045c1ecfb999128985f37ab86cdbcb56158ad55f25bff046ee7113d8ecb"
+  },
+  "id": "C4ho4hYF9V3gzjV6",
+  "tags": []
+}
