@@ -20,13 +20,13 @@
           ]
         }
       },
-      "id": "84e4b15f-c195-42a1-bc24-e22b8cadc564",
+      "id": "73bcfbe4-fb2c-48b3-a7ef-b4ecfb8b69f5",
       "typeVersion": 1.1,
       "name": "When Executed by Another Workflow",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
         0,
-        -240
+        0
       ]
     },
     {
@@ -40,13 +40,13 @@
       "typeVersion": 1,
       "position": [
         208,
-        -240
+        0
       ],
-      "id": "097b4c23-4c83-40ea-9746-9706239750b1",
+      "id": "c9d352cc-33fe-4233-95b2-80084a7cffa5",
       "name": "Create a card",
       "credentials": {
         "trelloApi": {
-          "id": "8To98eNuemRStSGl",
+          "id": "769khbwE5cJWjT7k",
           "name": "Trello account"
         }
       }
@@ -77,13 +77,13 @@
       "typeVersion": 1,
       "position": [
         416,
-        -240
+        0
       ],
-      "id": "5b8097c8-e16c-466b-be8b-7f7475e4b2b6",
+      "id": "5d918933-ec50-42bb-a0ff-e6aa3f3922bc",
       "name": "Update a row",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -94,9 +94,9 @@
       "typeVersion": 1,
       "position": [
         624,
-        -240
+        0
       ],
-      "id": "7a3dd3fc-da58-4e5d-b752-7264607cc147",
+      "id": "1c7df33e-295b-4f78-a45f-79b4bd8a5c06",
       "name": "No Operation, do nothing"
     }
   ],
@@ -141,11 +141,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "3f2d4de0-2a70-419a-9a75-ca99391a7988",
+  "versionId": "7647708f-a3e2-48fd-a4b1-806932aed874",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "6a2081baf18d661b2b7eb16bc28126ddd4aad7864944878b175c5c86d219b504"
+    "instanceId": "18bb1c4fea9a1e3520b590d38a81f3c99e5f6f1217772099ec4f03a440ea04e9"
   },
-  "id": "PsPOMFvKGx9yx872",
+  "id": "6JdpfERruBBEeZ7E",
   "tags": []
 }

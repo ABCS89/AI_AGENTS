@@ -1,5 +1,5 @@
 {
-  "name": "Do Zero ao Agente IA - V-0.3 - TRELLO",
+  "name": "Do Zero ao Agente IA - V-0.3",
   "nodes": [
     {
       "parameters": {
@@ -11,14 +11,14 @@
         -208,
         400
       ],
-      "id": "17fcb079-5c05-428e-9a1e-cff194be1416",
+      "id": "82133548-7720-412e-af10-2a9f80c8f098",
       "name": "When chat message received",
       "webhookId": "b98b634c-0dae-4252-ae61-d4781febad58"
     },
     {
       "parameters": {
         "options": {
-          "systemMessage": "=# 🤖 Agente Vendedor – Dudu (NoCode Startup)\n\nVocê é **Dudu**, o agente vendedor da **NoCode Startup**.  \nSua missão é **atender leads interessados nas formações**, qualificá-los, apresentar os produtos e conduzir até a criação do pedido e geração da cobrança no Asaas.  \n\nDudu deve ser **simpático e atencioso**, perguntando sempre **uma coisa por vez**, de forma clara e natural.  \nO processo de follow-up e de verificação de pagamento será feito por outros workflows — **não é responsabilidade de Dudu**.  \n\n---\n\n## 🎯 Regras Gerais\n\n- Sempre **atualizar a última mensagem recebida** do lead no Supabase usando `atualizar_lead`.  \n- Sempre que precisar consultar dados, usar as **tools disponíveis** (nunca inventar informações).  \n- Confirmar informações críticas (como CPF/CNPJ, e-mail, forma de pagamento) antes de seguir.  \n- Caso o lead não esteja cadastrado em alguma das plataformas (Supabase, Trello, Asaas), criar o registro necessário.  \n- Nunca oferecer tudo de uma vez. **Pergunte em etapas curtas**.  \n\n---\n\n## 📋 Etapas do Atendimento\n\n### 1. Abertura e Qualificação\n- Cumprimente de forma simpática e acolhedora.  \n- Pergunte primeiro o **CPF ou CNPJ** → essa é a **chave de verificação**.  \n- Buscar o lead no Supabase com `buscar_leads`.  \n- Se existir → prossiga direto para a qualificação.  \n- Se não existir → peça os dados para cadastro:  \n  - Nome completo  \n  - Telefone com DDD  \n  - E-mail  \n\n👉 Criar o lead no Supabase com `criar_lead`.  \n👉 Criar cartão no Trello com `criar_cartao`.  \n\n---\n\n### 2. Qualificação da Demanda\n- Depois de confirmar o cadastro, pergunte:  \n  1. \"Você já tem experiência com NoCode ou está começando agora?\"  \n  2. \"Qual sua maior demanda hoje: automações, criação de apps, banco de dados ou tudo junto?\"  \n\nEssas respostas ajudam a recomendar o produto mais adequado.  \n\n---\n\n### 3. Apresentação dos Produtos\n- Buscar os produtos disponíveis no Supabase com `buscar_produtos`.  \n- Apresentar sempre começando pela **Assinatura PRO** (R$ 1.997,00), mas sem dizer que está priorizando.  \n- Caso o lead não queira a PRO, apresentar as formações individuais (todas R$ 997,00):  \n  - Formação n8n  \n  - Formação Supabase  \n  - Formação Lovable  \n---\n\nNUNCA envie o nome do produto ao criar pedido.\nSempre use o campo \"id\" retornado pela tool buscar_produtos.\n\nExemplo:\n- Assinatura PRO → produto_id = 1\n- Formação n8n → produto_id = 2\n\nO campo produto_id deve ser sempre um número (bigint).\n\n---\n\n### 4. Pedido e Pagamento\n- Ao confirmar interesse, criar o **pedido no Supabase** (`criar_pedido`) com status **aguardando_pagamento**.  \n- Perguntar de forma clara:  \n  > \"Qual forma de pagamento você prefere: Pix, Boleto ou Cartão de Crédito?\"  \n\nFluxo técnico:\n1. Buscar os dados atualizados do lead no Supabase com `buscar_leads`.  \n2. Verificar se o cliente existe no Asaas:  \n   - Usar `asaas_buscar_cliente` com o CPF/CNPJ.  \n   - Se existir → seguir direto para gerar cobrança.  \n   - Se não existir → criar cliente no Asaas com `asaas_criar_cliente`.  \n3. Criar cobrança no Asaas com `asaas_criar_cobranca`, usando a forma de pagamento escolhida.  \n4. Atualizar o pedido no Supabase com `atualizar_pedido`, incluindo o link de pagamento.  \n5. Atualizar o cartão no Trello para **Aguardando Pagamento** com `trello_update_aguardando_pagamento`.  \n\nUse sempre o id_do trello para movimentar cartões.\n\n---\n\n### 5. Encerramento\n- Dudu deve sempre finalizar confirmando que:  \n  - O pedido foi criado,  \n  - O link de pagamento foi enviado,  \n  - E está disponível para dúvidas.  \n\nExemplo de encerramento:  \n> \"Pronto, seu pedido já foi criado ✅. Aqui está o link de pagamento: [link].  \n> Assim que o pagamento for confirmado, você terá acesso à formação escolhida.  \n> Posso te ajudar em mais alguma coisa?\"  \n\n---\n\n## 🔧 Tools disponíveis\n\n- **Supabase**  \n  - `buscar_leads`  \n  - `criar_lead`  \n  - `atualizar_lead`  \n  - `buscar_produtos`  \n  - `criar_pedido`  \n  - `atualizar_pedido`  \n\n- **Trello**  \n  - `criar_cartao`  \n  - `trello_update_aguardando_pagamento`  \n  - `trello_update_perdido`  \n\n- **Asaas**  \n  - `asaas_buscar_cliente`  \n  - `asaas_criar_cliente`  \n  - `asaas_criar_cobranca`  \n\n\n"
+          "systemMessage": "=# 🤖 Agente Vendedor – Dudu (NoCode Startup)\n\nVocê é **Dudu**, o agente vendedor da **NoCode Startup**.  \nSua missão é **atender leads interessados nas formações**, qualificá-los, apresentar os produtos e conduzir até a criação do pedido e geração da cobrança no Asaas.  \n\nDudu deve ser **simpático e atencioso**, perguntando sempre **uma coisa por vez**, de forma clara e natural.  \nO processo de follow-up e de verificação de pagamento será feito por outros workflows — **não é responsabilidade de Dudu**.  \n\n---\n\n## 🎯 Regras Gerais\n\n- Sempre **atualizar a última mensagem recebida** do lead no Supabase usando `atualizar_lead`.  \n- Sempre que precisar consultar dados, usar as **tools disponíveis** (nunca inventar informações).  \n- Confirmar informações críticas (como CPF/CNPJ, e-mail, forma de pagamento) antes de seguir.  \n- Caso o lead não esteja cadastrado em alguma das plataformas (Supabase, Trello, Asaas), criar o registro necessário.  \n- Nunca oferecer tudo de uma vez. **Pergunte em etapas curtas**.  \n\n---\n\n## 📋 Etapas do Atendimento\n\n### 1. Abertura e Qualificação\n- Cumprimente de forma simpática e acolhedora.  \n- Pergunte primeiro o **CPF ou CNPJ** → essa é a **chave de verificação**.  \n- Buscar o lead no Supabase com `buscar_leads`.  \n- Se existir → prossiga direto para a qualificação.  \n- Se não existir → peça os dados para cadastro:  \n  - Nome completo  \n  - Telefone com DDD  \n  - E-mail  \n\n👉 Criar Primeiro o cartão no Trello com `criar_cartao`. Cuidado para não criar mais de 1 cartão por Lead.\n👉 Depois Criar o lead no Supabase com `criar_lead`. e usar o `trello_id` \n\n---\n\n### 2. Qualificação da Demanda\n- Depois de confirmar o cadastro, pergunte:  \n  1. \"Você já tem experiência com NoCode ou está começando agora?\"  \n  2. \"Qual sua maior demanda hoje: automações, criação de apps, banco de dados ou tudo junto?\"  \n\nEssas respostas ajudam a recomendar o produto mais adequado.  \n\n---\n\n### 3. Apresentação dos Produtos\n- Buscar os produtos disponíveis no Supabase com `buscar_produtos`.  \n- Apresentar sempre começando pela **Assinatura PRO** (R$ 1.997,00), mas sem dizer que está priorizando.  \n- Caso o lead não queira a PRO, apresentar as formações individuais (todas R$ 997,00):  \n  - Formação n8n  \n  - Formação Supabase  \n  - Formação Lovable  \n---\n\nNUNCA envie o nome do produto ao criar pedido.\nSempre use o campo \"id\" retornado pela tool buscar_produtos.\n\nExemplo:\n- Assinatura PRO → produto_id = 1\n- Formação n8n → produto_id = 2\n\nO campo produto_id deve ser sempre um número (bigint).\n\n---\n\n### 4. Pedido e Pagamento\n- Ao confirmar interesse, criar o **pedido no Supabase** (`criar_pedido`) com status **aguardando_pagamento**.  \n- Perguntar de forma clara:  \n  > \"Qual forma de pagamento você prefere: Pix, Boleto ou Cartão de Crédito?\"  \n\nFluxo técnico:\n1. Buscar os dados atualizados do lead no Supabase com `buscar_leads`.  \n2. Verificar se o cliente existe no Asaas:  \n   - Usar `asaas_buscar_cliente` com o CPF/CNPJ.  \n   - Se existir → seguir direto para gerar cobrança.  \n   - Se não existir → criar cliente no Asaas com `asaas_criar_cliente`.  \n3. Criar cobrança no Asaas com `asaas_criar_cobranca`, usando a forma de pagamento escolhida.  \n4. Atualizar o pedido no Supabase com `atualizar_pedido`, incluindo o link de pagamento.  \n5. Atualizar o cartão no Trello para **Aguardando Pagamento** com `trello_update_aguardando_pagamento`. (caso não cosiga mudar avise)\n\nUse sempre o trello_id para movimentar cartões.\n\n---\n\n### 5. Encerramento\n- Dudu deve sempre finalizar confirmando que:  \n  - O pedido foi criado,  \n  - O link de pagamento foi enviado,  \n  - E está disponível para dúvidas.  \n\nExemplo de encerramento:  \n> \"Pronto, seu pedido já foi criado ✅. Aqui está o link de pagamento: [link].  \n> Assim que o pagamento for confirmado, você terá acesso à formação escolhida.  \n> Posso te ajudar em mais alguma coisa?\"  \n\n---\n\n## 🔧 Tools disponíveis\n\n- **Supabase**  \n  - `buscar_leads`  \n  - `criar_lead`  \n  - `atualizar_lead`  \n  - `buscar_produtos`  \n  - `criar_pedido`  \n  - `atualizar_pedido`  \n\n- **Trello**  \n  - `criar_cartao`  \n  - `trello_update_aguardando_pagamento`  \n  - `trello_update_perdido`  \n\n- **Asaas**  \n  - `asaas_buscar_cliente`  \n  - `asaas_criar_cliente`  \n  - `asaas_criar_cobranca`  \n\n\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -27,7 +27,7 @@
         0,
         400
       ],
-      "id": "7ad96ad4-e6f6-40d8-9997-0f2a7c8ae4c2",
+      "id": "a9f86f96-307f-4d1a-add9-bf2f86bbe1dc",
       "name": "AI Agent"
     },
     {
@@ -46,11 +46,11 @@
         0,
         0
       ],
-      "id": "265ed358-58c6-48ce-8e99-d04c6ca69a9d",
+      "id": "d4f11ad2-3031-4339-b861-b4b4fdc7d907",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "YI3QtG5TMEEsTJi5",
+          "id": "iCKjdaUsCRXhyh4O",
           "name": "OpenAI account"
         }
       }
@@ -65,12 +65,12 @@
         96,
         224
       ],
-      "id": "29ac95e4-16cf-4ad0-ad12-e95f2619119d",
+      "id": "814d5f31-1ac2-457e-a567-6b2fc024effc",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
-          "id": "c406TvJnioc3KqWB",
-          "name": "Postgres account"
+          "id": "cVcwQtbYv5AdD7zR",
+          "name": "supabase - Postgres account"
         }
       }
     },
@@ -86,7 +86,7 @@
         592
       ],
       "typeVersion": 1,
-      "id": "69b045e9-05af-437e-a333-55e25c19b3d8",
+      "id": "4a4caa2e-2008-40a2-bdeb-d7530705c5a3",
       "name": "Sticky Note"
     },
     {
@@ -103,11 +103,11 @@
         304,
         672
       ],
-      "id": "bee4b71b-34fa-456b-9832-f000e24f19b3",
+      "id": "ef062a4c-0d7a-4220-be5f-fc8d8338b9bb",
       "name": "buscar_leads",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -138,6 +138,10 @@
             {
               "fieldId": "cpfCnpj",
               "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', `CPF do lead`, 'string') }}"
+            },
+            {
+              "fieldId": "trello_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', `trello_id do Lead`, 'string') }}"
             }
           ]
         }
@@ -148,11 +152,11 @@
         432,
         672
       ],
-      "id": "d1f58fc6-994b-4920-a8cf-df32acfca5fc",
+      "id": "2562a527-27e2-4d17-8c6b-858bb40538be",
       "name": "criar_lead",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -187,11 +191,11 @@
         560,
         672
       ],
-      "id": "93e4de98-5846-4e7f-91f0-03f7702cf21b",
+      "id": "5766360e-bd30-4c1d-b1f6-2d4f448a010f",
       "name": "atualizar_lead",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -210,11 +214,11 @@
         784,
         672
       ],
-      "id": "4f57b837-788a-4da5-8dbf-993732393541",
+      "id": "27c0f911-fd9e-4013-b07e-e9811a992f8f",
       "name": "buscar_produtos",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -233,11 +237,11 @@
         1024,
         672
       ],
-      "id": "81e20205-7ab8-47e0-847b-09ad45392bc7",
+      "id": "3deb03a8-a2b3-4469-9c30-9bede785fd5e",
       "name": "buscar_pedidos",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -270,11 +274,11 @@
         1152,
         672
       ],
-      "id": "2eebf01b-b148-4fdf-bcbd-f58ab92ac847",
+      "id": "7a7ace4a-9501-48c2-9f63-c17e4198a4cc",
       "name": "criar_pedido",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -317,11 +321,11 @@
         1296,
         672
       ],
-      "id": "28e9b5da-2865-46a3-abb3-784d6252b25d",
+      "id": "b52b6742-5d0f-4953-8306-d7682c3e43d7",
       "name": "atualizar_pedido",
       "credentials": {
         "supabaseApi": {
-          "id": "mFpX6v7XSOw4jkNM",
+          "id": "f9Kg7HxoH8zZdivq",
           "name": "Supabase account"
         }
       }
@@ -338,7 +342,7 @@
         896
       ],
       "typeVersion": 1,
-      "id": "f2afd036-e0f3-4ea3-8108-62d38bab07cd",
+      "id": "1d4ce82b-958e-4250-b887-704690157576",
       "name": "Sticky Note1"
     },
     {
@@ -353,7 +357,7 @@
         896
       ],
       "typeVersion": 1,
-      "id": "600f2974-8886-4a5e-813e-4fca211d8c07",
+      "id": "6e1f2f3f-fb64-4449-a27c-f61940671b2d",
       "name": "Sticky Note2"
     },
     {
@@ -379,12 +383,12 @@
         960,
         1008
       ],
-      "id": "b7b4c27d-8a42-47cc-b0da-cc7cee7c1e7f",
+      "id": "7b9a041e-37d4-47ca-a0c2-dd9ba7fbd50c",
       "name": "asaas_buscar_cliente",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "DxrflbuRoUZtA9eL",
-          "name": "Asaas"
+          "id": "hRzWw5CcpGdflRJk",
+          "name": "Asaas Header Auth"
         }
       }
     },
@@ -433,12 +437,12 @@
         1168,
         1008
       ],
-      "id": "0c9e0742-4f1b-4623-b430-87630adc7b2e",
+      "id": "c3257cf6-80f6-4229-a0a8-cbcd5f24821f",
       "name": "asaas_criar_cliente",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "DxrflbuRoUZtA9eL",
-          "name": "Asaas"
+          "id": "hRzWw5CcpGdflRJk",
+          "name": "Asaas Header Auth"
         }
       }
     },
@@ -491,12 +495,12 @@
         1376,
         1008
       ],
-      "id": "2d686d22-660d-43f2-85e7-8f5c108091bb",
+      "id": "013c9cd6-166c-4b5e-8926-efc5090e9b02",
       "name": "asaas_criar_cobrança",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "DxrflbuRoUZtA9eL",
-          "name": "Asaas"
+          "id": "hRzWw5CcpGdflRJk",
+          "name": "Asaas Header Auth"
         }
       }
     },
@@ -505,9 +509,9 @@
         "description": "Use esta tool para criar um cartão no Trello e registrar o ID desse cartão no Supabase",
         "workflowId": {
           "__rl": true,
-          "value": "PsPOMFvKGx9yx872",
+          "value": "6JdpfERruBBEeZ7E",
           "mode": "list",
-          "cachedResultUrl": "/workflow/PsPOMFvKGx9yx872",
+          "cachedResultUrl": "/workflow/6JdpfERruBBEeZ7E",
           "cachedResultName": "Do Zero ao Agente IA - Criar cartão Trello"
         },
         "workflowInputs": {
@@ -567,35 +571,8 @@
         112,
         1008
       ],
-      "id": "96bbe565-ec53-48e9-aedd-796b3773e26c",
+      "id": "198cfd85-a46b-4f23-9913-f3e2c1dead62",
       "name": "criar_cartao"
-    },
-    {
-      "parameters": {
-        "descriptionType": "manual",
-        "toolDescription": "Move/atualiza o cartão do lead para a lista 'Aguardando Pagamento'.",
-        "operation": "update",
-        "id": {
-          "__rl": true,
-          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Card', `Use sempre o card_id do Lead\n`, 'string') }}",
-          "mode": "id"
-        },
-        "updateFields": {}
-      },
-      "type": "n8n-nodes-base.trelloTool",
-      "typeVersion": 1,
-      "position": [
-        320,
-        1008
-      ],
-      "id": "33b3f2e2-9253-44e9-8eb0-001ddc0e2038",
-      "name": "trello_update_aguardando_pagamento",
-      "credentials": {
-        "trelloApi": {
-          "id": "8To98eNuemRStSGl",
-          "name": "Trello account"
-        }
-      }
     },
     {
       "parameters": {
@@ -604,7 +581,7 @@
         "operation": "update",
         "id": {
           "__rl": true,
-          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Card', `trello_id do lead`, 'string') }}",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Card', `trello_id do Lead correspondente`, 'string') }}",
           "mode": "id"
         },
         "updateFields": {
@@ -617,11 +594,40 @@
         544,
         1008
       ],
-      "id": "8d2e279f-4bb8-478f-9bbf-f7a1a03213d7",
+      "id": "c5061481-1572-44c8-84d1-7d0e70ff06ba",
       "name": "trello_update_pagamento_perdido",
       "credentials": {
         "trelloApi": {
-          "id": "8To98eNuemRStSGl",
+          "id": "769khbwE5cJWjT7k",
+          "name": "Trello account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Move/atualiza o cartão do lead para a lista 'Aguardando Pagamento'.",
+        "operation": "update",
+        "id": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Card', `trello_id do lead`, 'string') }}",
+          "mode": "id"
+        },
+        "updateFields": {
+          "idList": "=69eb7384ac0b1eb7e2f2e1ad"
+        }
+      },
+      "type": "n8n-nodes-base.trelloTool",
+      "typeVersion": 1,
+      "position": [
+        320,
+        1008
+      ],
+      "id": "c634aafd-ea3d-4bb1-b187-3b9605e8b37b",
+      "name": "trello_update_aguardando_pagamento",
+      "credentials": {
+        "trelloApi": {
+          "id": "769khbwE5cJWjT7k",
           "name": "Trello account"
         }
       }
@@ -783,7 +789,7 @@
         ]
       ]
     },
-    "trello_update_aguardando_pagamento": {
+    "trello_update_pagamento_perdido": {
       "ai_tool": [
         [
           {
@@ -794,7 +800,7 @@
         ]
       ]
     },
-    "trello_update_pagamento_perdido": {
+    "trello_update_aguardando_pagamento": {
       "ai_tool": [
         [
           {
@@ -811,11 +817,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "f04e0673-8ca1-4589-ab47-ea8c6b40ae01",
+  "versionId": "3590653d-11d9-4946-869b-31931074848a",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "6a2081baf18d661b2b7eb16bc28126ddd4aad7864944878b175c5c86d219b504"
+    "instanceId": "18bb1c4fea9a1e3520b590d38a81f3c99e5f6f1217772099ec4f03a440ea04e9"
   },
-  "id": "rQ1RJKpAN7zmgxGy",
+  "id": "oZ2oXaCkwZY2jQGN",
   "tags": []
 }
