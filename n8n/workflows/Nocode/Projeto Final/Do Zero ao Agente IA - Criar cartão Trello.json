@@ -20,13 +20,13 @@
           ]
         }
       },
-      "id": "48ca1b04-fa15-49d5-a822-e3f683a5a141",
+      "id": "84e4b15f-c195-42a1-bc24-e22b8cadc564",
       "typeVersion": 1.1,
       "name": "When Executed by Another Workflow",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
         0,
-        0
+        -240
       ]
     },
     {
@@ -40,13 +40,13 @@
       "typeVersion": 1,
       "position": [
         208,
-        0
+        -240
       ],
-      "id": "7da43152-6bf5-4bd7-bfcd-c3d2f6bf4059",
+      "id": "097b4c23-4c83-40ea-9746-9706239750b1",
       "name": "Create a card",
       "credentials": {
         "trelloApi": {
-          "id": "cO32raAImrZySdoW",
+          "id": "8To98eNuemRStSGl",
           "name": "Trello account"
         }
       }
@@ -77,13 +77,13 @@
       "typeVersion": 1,
       "position": [
         416,
-        0
+        -240
       ],
-      "id": "b6efcb3e-b566-4c26-9e96-29ac8cdb6d2e",
+      "id": "5b8097c8-e16c-466b-be8b-7f7475e4b2b6",
       "name": "Update a row",
       "credentials": {
         "supabaseApi": {
-          "id": "c3A343ZpwmkpwvDn",
+          "id": "mFpX6v7XSOw4jkNM",
           "name": "Supabase account"
         }
       }
@@ -94,9 +94,9 @@
       "typeVersion": 1,
       "position": [
         624,
-        0
+        -240
       ],
-      "id": "40ce0882-783c-4247-b02f-6df933168d3e",
+      "id": "7a3dd3fc-da58-4e5d-b752-7264607cc147",
       "name": "No Operation, do nothing"
     }
   ],
@@ -136,16 +136,16 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "6dfaebbf-e4b8-4025-8f98-c6f772b4a3f2",
+  "versionId": "3f2d4de0-2a70-419a-9a75-ca99391a7988",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "2fcc36654c1e8f620e51e39aa8b11ba3f15de46404f10ff44c6c84964223ae6f"
+    "instanceId": "6a2081baf18d661b2b7eb16bc28126ddd4aad7864944878b175c5c86d219b504"
   },
-  "id": "TPIjvIkuOz5Wqijq",
+  "id": "PsPOMFvKGx9yx872",
   "tags": []
 }
