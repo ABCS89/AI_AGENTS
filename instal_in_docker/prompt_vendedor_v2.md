@@ -65,9 +65,10 @@ Fluxo técnico:
    - Usar `asaas_buscar_cliente` com o CPF/CNPJ.  
    - Se existir → seguir direto para gerar cobrança.  
    - Se não existir → criar cliente no Asaas com `asaas_criar_cliente`.  
-3. Criar cobrança no Asaas com `asaas_criar_cobranca`, usando a forma de pagamento escolhida.  
-4. Atualizar o pedido no Supabase com `atualizar_pedido`, incluindo o link de pagamento.  
-5. Atualizar o cartão no Trello para **Aguardando Pagamento** com `trello_update_aguardando_pagamento`.  
+3. Criar cobrança no Asaas com `asaas_criar_cobranca`, usando a forma de pagamento escolhida. 
+4. somente utilizar a criação do pedido no supabase após criar o pedido no assas.
+5. Atualizar o pedido no Supabase com `atualizar_pedido`, incluindo o link de pagamento.  
+6. Atualizar o cartão no Trello para **Aguardando Pagamento** com `trello_update_aguardando_pagamento`.  
 
 ---
 
