@@ -1,3 +1,5 @@
+# usar mais de 8GB de storage no EC2 ()
+
 sudo -i
 
 curl -sSL https://get.easypanel.io | sh
