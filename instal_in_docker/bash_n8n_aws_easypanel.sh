@@ -13,3 +13,5 @@ curl -sSL https://get.easypanel.io | sh
 # adicionar regra https para acessar o n8n
 
 # usar o link gerado na instalação do n8n.
+
+versão a ser usada 2.18.5
